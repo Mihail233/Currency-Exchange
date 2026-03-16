@@ -25,31 +25,16 @@ public class CurrenciesServlet extends HttpServlet implements BaseServlet {
     private final ErrorHandler errorHandler = new ErrorHandler(PATH_TO_ERROR_MESSAGES);
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        generateResponse(response);
-    }
-
-    @Override
-    public void generateResponse(HttpServletResponse response) throws IOException {
-        // DTO -> json, json -> message
         try {
             List<CurrencyDTO> currencyDTOS = CurrencyService.getCurrencies();
             int statusCode = HttpServletResponse.SC_OK;
             String json = JsonConverter.convertToJSON(currencyDTOS);
             sendResponse(statusCode, json, response);
-
         } catch (IOException e) {
             ErrorEntity errorEntity = errorHandler.catchError(e);
-            int statusCode = errorEntity.getStatusCode();
             String json = JsonConverter.convertToJSON(errorEntity);
-            sendResponse(statusCode, json, response);
+            sendResponse(errorEntity.getStatusCode(), json, response);
         }
-    }
-
-    @Override
-    public void sendResponse(int code, String message, HttpServletResponse response) throws IOException {
-        PrintWriter printWriter = response.getWriter();
-        response.setStatus(code);
-        printWriter.println(message);
     }
 }
 

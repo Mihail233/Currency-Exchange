@@ -8,4 +8,8 @@ public record ErrorEntity(int statusCode, String message) {
     public int getStatusCode() {
         return statusCode;
     }
+
+    public String getMessage() {
+        return message;
+    }
 }
