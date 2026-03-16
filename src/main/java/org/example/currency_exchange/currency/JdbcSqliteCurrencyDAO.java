@@ -1,8 +1,8 @@
 package org.example.currency_exchange.currency;
 
-import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
 import org.example.currency_exchange.HikariPool;
-import org.example.currency_exchange.crud.CurrencyDAO;
+import org.example.currency_exchange.commons.dao.CurrencyDAO;
+import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,6 +13,7 @@ import java.util.List;
 
 public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
 
+    @Override
     public List<Currency> findCurrencies() throws DataBaseUnavailableException {
         List<Currency> currencies = new ArrayList<>();
         try (Connection connection = HikariPool.getConnection()) {
@@ -29,11 +30,10 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
                         );
                 currencies.add(currency);
             }
+            return currencies;
         } catch (SQLException e) {
-            System.out.println(e);
             throw new DataBaseUnavailableException("База данных недоступна");
         }
-        return currencies;
     }
 
     @Override

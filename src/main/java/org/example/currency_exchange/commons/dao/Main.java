@@ -1,20 +1,9 @@
-package org.example.currency_exchange.crud;
-
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import org.example.currency_exchange.HikariPool;
+package org.example.currency_exchange.commons.dao;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.*;
-import java.text.MessageFormat;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 public class Main {
     public static void main(String[] args) throws SQLException {

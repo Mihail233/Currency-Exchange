@@ -1,4 +1,4 @@
-package org.example.currency_exchange.crud;
+package org.example.currency_exchange.commons.dao;
 
 import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
 

@@ -1,4 +1,4 @@
-package org.example.currency_exchange.crud;
+package org.example.currency_exchange.commons.dao;
 
 public interface ExchangeRateDAO {
     public void updateTuple();

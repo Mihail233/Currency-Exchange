@@ -3,7 +3,7 @@ package org.example.currency_exchange.currency.service.subservice;
 import org.example.currency_exchange.currency.CurrencyDTO;
 import org.example.currency_exchange.currency.mapper.CurrencyMapper;
 import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
-import org.example.currency_exchange.crud.CurrencyDAO;
+import org.example.currency_exchange.commons.dao.CurrencyDAO;
 import org.example.currency_exchange.currency.Currency;
 
 import java.util.ArrayList;

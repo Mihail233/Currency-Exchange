@@ -2,15 +2,14 @@ package org.example.currency_exchange.currency.servlet;
 
 import java.io.*;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import java.util.List;
 import org.example.currency_exchange.commons.BaseServlet;
-import org.example.currency_exchange.commons.JsonConverter;
-import org.example.currency_exchange.currency.CurrenciesJsonConverter;
+import org.example.currency_exchange.ErrorEntity;
+import org.example.currency_exchange.JsonConverter;
 import org.example.currency_exchange.currency.CurrencyDTO;
-import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
+import org.example.currency_exchange.currency.ErrorHandler;
 import org.example.currency_exchange.currency.service.CurrencyService;
 
 //вызов сервиса
@@ -20,31 +19,30 @@ import org.example.currency_exchange.currency.service.CurrencyService;
 
 @WebServlet(name = "CurrenciesServlet", value = "/currencies")
 public class CurrenciesServlet extends HttpServlet implements BaseServlet {
-
+    private static final String PATH_TO_ERROR_MESSAGES = "apiErrorCodes/currencyError.property";
     private final CurrencyService CurrencyService = new CurrencyService();
-    private final JsonConverter<List<CurrencyDTO>> JsonConverter = new CurrenciesJsonConverter();
+    private final JsonConverter JsonConverter = new JsonConverter();
+    private final ErrorHandler errorHandler = new ErrorHandler(PATH_TO_ERROR_MESSAGES);
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         generateResponse(response);
     }
 
     @Override
     public void generateResponse(HttpServletResponse response) throws IOException {
-        //перекинуть это в блок validator
-        int statusCode;
+        // DTO -> json, json -> message
         try {
             List<CurrencyDTO> currencyDTOS = CurrencyService.getCurrencies();
-            statusCode = HttpServletResponse.SC_OK;
-
+            int statusCode = HttpServletResponse.SC_OK;
             String json = JsonConverter.convertToJSON(currencyDTOS);
             sendResponse(statusCode, json, response);
-        } catch (DataBaseUnavailableException e) {
-            statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
-            String jsonError = JsonConverter.getJsonError(statusCode);
-            sendResponse(statusCode, jsonError, response);
+        } catch (IOException e) {
+            ErrorEntity errorEntity = errorHandler.catchError(e);
+            int statusCode = errorEntity.getStatusCode();
+            String json = JsonConverter.convertToJSON(errorEntity);
+            sendResponse(statusCode, json, response);
         }
-        // DTO -> json, json -> message
     }
 
     @Override
