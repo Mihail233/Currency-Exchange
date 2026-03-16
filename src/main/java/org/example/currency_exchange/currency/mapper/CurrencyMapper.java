@@ -1,0 +1,18 @@
+package org.example.currency_exchange.currency.mapper;
+
+import org.example.currency_exchange.commons.ObjectDtoMapper;
+import org.example.currency_exchange.currency.CurrencyDTO;
+import org.example.currency_exchange.currency.Currency;
+
+public class CurrencyMapper implements ObjectDtoMapper<Currency, CurrencyDTO> {
+
+    @Override
+    public CurrencyDTO objectToDto(Currency currency) {
+        return new CurrencyDTO(currency.getId(), currency.getCode(), currency.getFullName(), currency.getSign());
+    }
+
+    @Override
+    public Currency dtoToObject(CurrencyDTO currencyDTO) {
+        return null;
+    }
+}
