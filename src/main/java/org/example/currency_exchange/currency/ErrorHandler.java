@@ -1,42 +1,41 @@
 package org.example.currency_exchange.currency;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.currency_exchange.ErrorEntity;
+import org.example.currency_exchange.ResponseEntity;
+import org.example.currency_exchange.JsonConverter;
 import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
-import org.example.currency_exchange.exception_and_error.FileApiErrorCodesReadingException;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ErrorHandler {
-    private final Properties errors = new Properties();
+    private final Map<String, ResponseEntity> errors = new HashMap<>();
+    private final JsonConverter jsonConverter = new JsonConverter();
 
-    public ErrorHandler(String pathToErrorMessages) {
-        loadErrorMessages(pathToErrorMessages);
-    }
-
-    public void loadErrorMessages(String pathToErrorMessages) {
-        try (InputStream errorsInputStream = this.getClass().getClassLoader().getResourceAsStream(pathToErrorMessages)){
-            errors.load(errorsInputStream);
-        } catch (IOException e) {
-            throw new FileApiErrorCodesReadingException(String.format("Ошибка с файлом %s ", pathToErrorMessages));
+    public ErrorHandler() {
+        try {
+            loadErrorMessages();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("d");
         }
     }
 
-    public ErrorEntity catchError(IOException exception) {
-        int statusCode;
-        switch (exception) {
-            case DataBaseUnavailableException dataBaseUnavailableException -> {
-                statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-                String messageError = getMessageError(statusCode);
-                return new ErrorEntity(statusCode, messageError);
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + exception);
+    public void loadErrorMessages() throws JsonProcessingException {
+        for (CurrencyTypeError currencyTypeError: CurrencyTypeError.values()) {
+            ResponseEntity responseEntity = currencyTypeError.getResponseEntity();
+            String messageJson = jsonConverter.convertToJSON(responseEntity);
+            responseEntity.setMessage(messageJson);
+            errors.put(currencyTypeError.toString(), responseEntity);
         }
     }
 
-    public String getMessageError(int statusCode) {
-        return errors.getProperty(String.valueOf(statusCode));
+    public ResponseEntity catchError(IOException exception) {
+        return errors.get(getObjectClassName(exception));
+    }
+
+    public String getObjectClassName(IOException ioException) {
+        return ioException.getClass().getSimpleName();
     }
 }

@@ -6,13 +6,14 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class JsonConverter {
-    private static final ObjectMapper MAPPER = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT).setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+    private final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT).setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
-    public String convertToJSON(Object object) {
-        try {
-            return MAPPER.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    public String convertToJSON(Object object) throws JsonProcessingException {
+        return mapper.writeValueAsString(object);
     }
 }
+//        try {
+//            return mapper.writeValueAsString(object);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }

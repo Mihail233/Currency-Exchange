@@ -1,7 +1,7 @@
 package org.example.currency_exchange.commons;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.currency_exchange.ErrorEntity;
+import org.example.currency_exchange.ResponseEntity;
 
 import java.io.IOException;
 import java.io.PrintWriter;

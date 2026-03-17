@@ -1,7 +1,7 @@
 package org.example.currency_exchange.currency.mapper;
 
 import org.example.currency_exchange.commons.ObjectDtoMapper;
-import org.example.currency_exchange.currency.CurrencyDTO;
+import org.example.currency_exchange.currency.dto.CurrencyDTO;
 import org.example.currency_exchange.currency.Currency;
 
 public class CurrencyMapper implements ObjectDtoMapper<Currency, CurrencyDTO> {
