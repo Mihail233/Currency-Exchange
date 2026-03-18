@@ -1,7 +1,9 @@
 package org.example.currency_exchange.currency.service.subservice;
 
 import org.example.currency_exchange.commons.ObjectDtoMapper;
+import org.example.currency_exchange.currency.dto.CurrencyAdditionDTO;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
+import org.example.currency_exchange.currency.mapper.CurrencyAdditionMapper;
 import org.example.currency_exchange.currency.mapper.CurrencyMapper;
 import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
 import org.example.currency_exchange.commons.dao.CurrencyDAO;
@@ -30,5 +32,11 @@ public class CurrenciesSubService {
             currencyDTOS.add(currencyDTO);
         }
         return currencyDTOS;
+    }
+
+    public void setCurrency(CurrencyAdditionDTO currencyAdditionDTO) throws DataBaseUnavailableException {
+        CurrencyAdditionMapper currencyAdditionMapper = new CurrencyAdditionMapper();
+        Currency currency = currencyAdditionMapper.dtoToObject(currencyAdditionDTO);
+        currencyDAO.saveCurrency(currency);
     }
 }

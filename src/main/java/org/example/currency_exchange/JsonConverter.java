@@ -11,9 +11,8 @@ public class JsonConverter {
     public String convertToJSON(Object object) throws JsonProcessingException {
         return mapper.writeValueAsString(object);
     }
+
+    public ObjectMapper getMapper() {
+        return mapper;
+    }
 }
-//        try {
-//            return mapper.writeValueAsString(object);
-//        } catch (JsonProcessingException e) {
-//            throw new RuntimeException(e);
-//        }

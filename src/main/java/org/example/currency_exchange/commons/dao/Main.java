@@ -13,6 +13,7 @@ public class Main {
 }
 
 class Test {
+
     public void test() {
         Properties properties = new Properties();
         try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/currencyError.property")){

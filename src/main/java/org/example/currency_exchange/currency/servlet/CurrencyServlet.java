@@ -1,13 +1,12 @@
 package org.example.currency_exchange.currency.servlet;
 
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.currency_exchange.JsonConverter;
-import org.example.currency_exchange.commons.BaseServlet;
+import org.example.currency_exchange.ResponseEntity;
+import org.example.currency_exchange.commons.BaseHttpServlet;
 import org.example.currency_exchange.commons.ObjectDtoMapper;
-import org.example.currency_exchange.currency.ErrorHandler;
+import org.example.currency_exchange.currency.CurrencyExceptionHandler;
 import org.example.currency_exchange.currency.dto.CodeDTO;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
 import org.example.currency_exchange.currency.mapper.CodeMapper;
@@ -19,22 +18,20 @@ import java.util.Arrays;
 import java.util.List;
 
 @WebServlet(name = "CurrencyServlet", value = "/currency/*")
-public class CurrencyServlet extends HttpServlet implements BaseServlet {
-    private static final String PATH_TO_ERROR_MESSAGES = "apiErrorCodes/currencyError.property";
+public class CurrencyServlet extends BaseHttpServlet {
     private final ObjectDtoMapper<String, CodeDTO> codeMapper = new CodeMapper();
     private final CurrencyService currencyService = new CurrencyService();
-    private final JsonConverter jsonConverter = new JsonConverter();
-    private final ErrorHandler errorHandler = new ErrorHandler();
+    private final CurrencyExceptionHandler currencyExceptionHandler = new CurrencyExceptionHandler();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String code = getCurrencyCodeFromPath(request.getPathInfo());
             CodeDTO codeDTO = codeMapper.objectToDto(code);
             CurrencyDTO currencyDTO = currencyService.getCurrency(codeDTO);
-            //
-            sendResponse(500, "", response);
+            sendSuccessfulResponse(currencyDTO, response);
         } catch (IOException e) {
-            System.out.println(51);
+            ResponseEntity responseEntity = currencyExceptionHandler.catchException(e);
+            sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);
         }
     }
 

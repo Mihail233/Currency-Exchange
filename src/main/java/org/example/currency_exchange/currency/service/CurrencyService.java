@@ -2,6 +2,7 @@ package org.example.currency_exchange.currency.service;
 
 
 import org.example.currency_exchange.currency.dto.CodeDTO;
+import org.example.currency_exchange.currency.dto.CurrencyAdditionDTO;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
 import org.example.currency_exchange.currency.JdbcSqliteCurrencyDAO;
 import org.example.currency_exchange.exception_and_error.CurrencyNotFoundException;
@@ -31,5 +32,9 @@ public class CurrencyService {
 
     public CurrencyDTO getCurrency(CodeDTO codeDTO) throws DataBaseUnavailableException, CurrencyNotFoundException {
         return currencySubService.getCurrency(codeDTO);
+    }
+
+    public void setCurrency(CurrencyAdditionDTO currencyAdditionDTO) throws DataBaseUnavailableException {
+        currenciesSubService.setCurrency(currencyAdditionDTO);
     }
 }
