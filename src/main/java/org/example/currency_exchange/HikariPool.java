@@ -14,6 +14,7 @@ public class HikariPool {
 
     static {
         HIKARI_CONFIG = new HikariConfig(PROPERTY_FILE_NAME);
+        HIKARI_CONFIG.addDataSourceProperty("foreign_keys", "on");
         HIKARI_CONFIG.setDriverClassName("org.sqlite.JDBC");
         DATA_SOURCE = new HikariDataSource(HIKARI_CONFIG);
     }
