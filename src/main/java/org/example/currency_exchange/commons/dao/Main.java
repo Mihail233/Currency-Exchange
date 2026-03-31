@@ -1,5 +1,9 @@
 package org.example.currency_exchange.commons.dao;
 
+import org.example.currency_exchange.HikariPool;
+import org.example.currency_exchange.exception_and_error.CurrencyWithThisCodeExistsException;
+import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
@@ -7,8 +11,18 @@ import java.util.Properties;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        Test test = new Test();
-        test.test();
+        try (Connection connection = HikariPool.getConnection()) {
+            String query = """
+                    insert INTO ExchangeRates(BaseCurrencyId, TargetCurrencyId)
+                    Values(2, 1)
+                    """;
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+             preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
     }
 }
 

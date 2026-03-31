@@ -3,8 +3,9 @@ package org.example.currency_exchange.currency.service.subservice;
 import org.example.currency_exchange.commons.ObjectDtoMapper;
 import org.example.currency_exchange.currency.dto.CurrencyAdditionDTO;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
-import org.example.currency_exchange.currency.mapper.CurrencyAdditionMapper;
+import org.example.currency_exchange.currency.mapper.AdditionCurrencyMapper;
 import org.example.currency_exchange.currency.mapper.CurrencyMapper;
+import org.example.currency_exchange.exception_and_error.CurrencyWithThisCodeExistsException;
 import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
 import org.example.currency_exchange.commons.dao.CurrencyDAO;
 import org.example.currency_exchange.currency.Currency;
@@ -14,6 +15,8 @@ import java.util.List;
 
 public class CurrenciesSubService {
     private final CurrencyDAO<Currency> currencyDAO;
+    private final ObjectDtoMapper<Currency, CurrencyDTO> currencyMapper = new CurrencyMapper();
+    private final AdditionCurrencyMapper additionCurrencyMapper = new AdditionCurrencyMapper();
 
     public CurrenciesSubService(CurrencyDAO<Currency> currencyDAO) {
         this.currencyDAO = currencyDAO;
@@ -24,19 +27,18 @@ public class CurrenciesSubService {
         return convertCurrenciesToDTO(currencies);
     }
 
-    public List<CurrencyDTO> convertCurrenciesToDTO(List<Currency> currencies) {
-        List<CurrencyDTO> currencyDTOS = new ArrayList<>();
-        ObjectDtoMapper<Currency, CurrencyDTO> currencyMapper = new CurrencyMapper();
+    private List<CurrencyDTO> convertCurrenciesToDTO(List<Currency> currencies) {
+        List<CurrencyDTO> currencyDTOs = new ArrayList<>();
         for (Currency currency: currencies) {
             CurrencyDTO currencyDTO = currencyMapper.objectToDto(currency);
-            currencyDTOS.add(currencyDTO);
+            currencyDTOs.add(currencyDTO);
         }
-        return currencyDTOS;
+        return currencyDTOs;
     }
 
-    public void setCurrency(CurrencyAdditionDTO currencyAdditionDTO) throws DataBaseUnavailableException {
-        CurrencyAdditionMapper currencyAdditionMapper = new CurrencyAdditionMapper();
-        Currency currency = currencyAdditionMapper.dtoToObject(currencyAdditionDTO);
-        currencyDAO.saveCurrency(currency);
+    public CurrencyDTO setCurrency(CurrencyAdditionDTO currencyAdditionDTO) throws DataBaseUnavailableException, CurrencyWithThisCodeExistsException {
+        Currency currencyAddition = additionCurrencyMapper.dtoToObject(currencyAdditionDTO);
+        Currency currency = currencyDAO.saveCurrency(currencyAddition);
+        return currencyMapper.objectToDto(currency);
     }
 }

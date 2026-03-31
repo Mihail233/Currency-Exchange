@@ -9,9 +9,6 @@ import org.example.currency_exchange.currency.mapper.CurrencyMapper;
 import org.example.currency_exchange.exception_and_error.CurrencyNotFoundException;
 import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CurrencySubService {
     private final CurrencyDAO<Currency> currencyDAO;
 

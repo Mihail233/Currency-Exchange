@@ -14,7 +14,7 @@ abstract public class ExceptionHandler {
 
     abstract public ResponseEntity catchException(IOException exception);
 
-    public void loadErrorMessages(TypeException[] typeExceptions) throws JsonProcessingException {
+    protected void loadErrorMessages(TypeException[] typeExceptions) throws JsonProcessingException {
         for (TypeException typeException: typeExceptions) {
             ResponseEntity responseEntity = typeException.getResponseEntity();
             String messageJson = jsonConverter.convertToJSON(responseEntity);

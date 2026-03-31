@@ -21,15 +21,15 @@ public class CurrencyExceptionHandler extends ExceptionHandler {
 
     @Override
     public ResponseEntity catchException(IOException exception) {
-        String exceptionClassName = getObjectClassName(exception);
+        String exceptionClassName = getClassName(exception);
         Map<String, ResponseEntity> exceptions = getExceptions();
         if (exceptions.containsKey(exceptionClassName)) {
-            return exceptions.get(getObjectClassName(exception));
+            return exceptions.get(exceptionClassName);
         }
         return exceptions.get(CurrencyTypeException.UnknownException.toString());
     }
 
-    public String getObjectClassName(IOException ioException) {
-        return ioException.getClass().getSimpleName();
+    private String getClassName(IOException exception) {
+        return exception.getClass().getSimpleName();
     }
 }
