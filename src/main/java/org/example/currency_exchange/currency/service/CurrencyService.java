@@ -30,7 +30,7 @@ public class CurrencyService {
         return currencySubService.getCurrency(codeDTO);
     }
 
-    public CurrencyDTO setCurrency(CurrencyAdditionDTO currencyAdditionDTO) throws DataBaseUnavailableException, CurrencyWithThisCodeExistsException {
-        return currenciesSubService.setCurrency(currencyAdditionDTO);
+    public CurrencyDTO addCurrency(CurrencyAdditionDTO currencyAdditionDTO) throws DataBaseUnavailableException, CurrencyWithThisCodeExistsException {
+        return currenciesSubService.addCurrency(currencyAdditionDTO);
     }
 }

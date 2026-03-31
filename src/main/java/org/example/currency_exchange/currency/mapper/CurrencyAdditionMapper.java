@@ -4,7 +4,7 @@ import org.example.currency_exchange.commons.ObjectDtoMapper;
 import org.example.currency_exchange.currency.Currency;
 import org.example.currency_exchange.currency.dto.CurrencyAdditionDTO;
 
-public class AdditionCurrencyMapper implements ObjectDtoMapper<Currency, CurrencyAdditionDTO> {
+public class CurrencyAdditionMapper implements ObjectDtoMapper<Currency, CurrencyAdditionDTO> {
     @Override
     public CurrencyAdditionDTO objectToDto(Currency currency) {
         return new CurrencyAdditionDTO(currency.getFullName(), currency.getCode(), currency.getSign());

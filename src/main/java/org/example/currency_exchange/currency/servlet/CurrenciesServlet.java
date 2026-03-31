@@ -12,8 +12,6 @@ import org.example.currency_exchange.currency.service.CurrencyService;
 import org.example.currency_exchange.exception_and_error.RequiredFormFieldMissException;
 
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -39,11 +37,9 @@ public class CurrenciesServlet extends BaseHttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            String body = getBodyFromRequest(request);
-            String encodeBody = decodeBody(body);
-            Map<String, String> parameters = convertBodyToMap(encodeBody);
+            Map<String, String> parameters = getParametersFromRequest(request);
             CurrencyAdditionDTO currencyAdditionDTO = convertMapToDto(parameters);
-            CurrencyDTO currencyDTO = currencyService.setCurrency(currencyAdditionDTO);
+            CurrencyDTO currencyDTO = currencyService.addCurrency(currencyAdditionDTO);
             sendSuccessfulResponse(currencyDTO, response);
         } catch (IOException e) {
             ResponseEntity responseEntity = currencyExceptionHandler.catchException(e);
@@ -51,12 +47,8 @@ public class CurrenciesServlet extends BaseHttpServlet {
         }
     }
 
-    public String decodeBody(String body) {
-        return URLDecoder.decode(body, StandardCharsets.UTF_8);
-    }
-
     //кастомный под каждый сервлет?
-    public CurrencyAdditionDTO convertMapToDto(Map<String, String> parameters) throws RequiredFormFieldMissException {
+    private CurrencyAdditionDTO convertMapToDto(Map<String, String> parameters) throws RequiredFormFieldMissException {
         try {
             return getJsonConverter().getMapper().convertValue(parameters, CurrencyAdditionDTO.class);
         } catch (RuntimeException e) {

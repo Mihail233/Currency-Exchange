@@ -19,14 +19,14 @@ import java.util.List;
 
 @WebServlet(name = "CurrencyServlet", value = "/currency/*")
 public class CurrencyServlet extends BaseHttpServlet {
-    private final ObjectDtoMapper<String, CodeDTO> codeMapper = new CodeMapper();
+    private final ObjectDtoMapper<String, CodeDTO> objectDtoMapper = new CodeMapper();
     private final CurrencyService currencyService = new CurrencyService();
     private final CurrencyExceptionHandler currencyExceptionHandler = new CurrencyExceptionHandler();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            String code = getCurrencyCodeFromPath(request.getPathInfo());
-            CodeDTO codeDTO = codeMapper.objectToDto(code);
+            String currencyCode = getCurrencyCodeFromPath(request.getPathInfo());
+            CodeDTO codeDTO = objectDtoMapper.objectToDto(currencyCode);
             CurrencyDTO currencyDTO = currencyService.getCurrency(codeDTO);
             sendSuccessfulResponse(currencyDTO, response);
         } catch (IOException e) {
@@ -35,20 +35,20 @@ public class CurrencyServlet extends BaseHttpServlet {
         }
     }
 
-    public String getCurrencyCodeFromPath(String path) throws InvalidCurrencyCodeInPathException {
+    private String getCurrencyCodeFromPath(String path) throws InvalidCurrencyCodeInPathException {
         String pathSeparator = "/";
         List<String> pathComponents = Arrays.asList(path.split(pathSeparator));
         return filterPathComponents(pathComponents);
     }
 
-    public String filterPathComponents(List<String> pathComponents) throws InvalidCurrencyCodeInPathException {
+    private String filterPathComponents(List<String> pathComponents) throws InvalidCurrencyCodeInPathException {
         pathComponents = pathComponents.stream()
                 .filter(component -> !component.isEmpty())
                 .toList();
 
         int allowedAmountPathComponents = 1;
         if (pathComponents.size() != allowedAmountPathComponents) {
-            throw new InvalidCurrencyCodeInPathException("Найден не только 1 code");
+            throw new InvalidCurrencyCodeInPathException("Не было передано кода валюты");
         }
         return pathComponents.getFirst();
     }

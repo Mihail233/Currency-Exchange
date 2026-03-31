@@ -11,14 +11,15 @@ import org.example.currency_exchange.exception_and_error.DataBaseUnavailableExce
 
 public class CurrencySubService {
     private final CurrencyDAO<Currency> currencyDAO;
+    private final ObjectDtoMapper<Currency, CurrencyDTO> objectDtoMapper = new CurrencyMapper();
 
     public CurrencySubService(CurrencyDAO<Currency> currencyDAO) {
         this.currencyDAO = currencyDAO;
     }
 
     public CurrencyDTO getCurrency(CodeDTO codeDTO) throws DataBaseUnavailableException, CurrencyNotFoundException {
-        Currency currency = currencyDAO.findByCode(codeDTO.code());
-        ObjectDtoMapper<Currency, CurrencyDTO> currencyMapper = new CurrencyMapper();
-        return currencyMapper.objectToDto(currency);
+        String currencyCode = codeDTO.code();
+        Currency currency = currencyDAO.findByCode(currencyCode);
+        return objectDtoMapper.objectToDto(currency);
     }
 }
