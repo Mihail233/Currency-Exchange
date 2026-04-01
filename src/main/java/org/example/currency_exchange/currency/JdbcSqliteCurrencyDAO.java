@@ -1,6 +1,7 @@
 package org.example.currency_exchange.currency;
 
 import org.example.currency_exchange.HikariPool;
+import org.example.currency_exchange.commons.JdbcSqliteUtil;
 import org.example.currency_exchange.commons.dao.CurrencyDAO;
 import org.example.currency_exchange.exception_and_error.CurrencyNotFoundException;
 import org.example.currency_exchange.exception_and_error.CurrencyWithThisCodeExistsException;
@@ -22,7 +23,7 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
 
             List<Currency> currencies = new ArrayList<>();
             while (resultSet.next()) {
-                Currency currency = getCurrencyFromResultSet(resultSet);
+                Currency currency = JdbcSqliteUtil.getCurrencyFromResultSet(resultSet);
                 currencies.add(currency);
             }
             return currencies;
@@ -32,7 +33,7 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
     }
 
     @Override
-    public Currency findByCode(String code) throws DataBaseUnavailableException, CurrencyNotFoundException {
+    public Currency findCurrencyByCode(String currencyCode) throws DataBaseUnavailableException, CurrencyNotFoundException {
         try (Connection connection = HikariPool.getConnection()) {
 
             String query = """
@@ -40,13 +41,13 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
                                 where code = (?)
                     """;
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, code);
+            preparedStatement.setString(1, currencyCode);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (isResultNotFound(resultSet)) {
+            if (JdbcSqliteUtil.isResultNotFound(resultSet)) {
                 throw new CurrencyNotFoundException("Валюта не найдена");
             }
-            return getCurrencyFromResultSet(resultSet);
+            return JdbcSqliteUtil.getCurrencyFromResultSet(resultSet);
         } catch (SQLException e) {
             throw new DataBaseUnavailableException("База данных недоступна");
         }
@@ -72,26 +73,12 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
             preparedStatement.setString(4, currency.getCode());
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (isResultNotFound(resultSet)) {
+            if (JdbcSqliteUtil.isResultNotFound(resultSet)) {
                 throw new CurrencyWithThisCodeExistsException("Валюта с таким кодом уже существует");
             }
-            return getCurrencyFromResultSet(resultSet);
+            return JdbcSqliteUtil.getCurrencyFromResultSet(resultSet);
         } catch (SQLException e) {
             throw new DataBaseUnavailableException("База данных недоступна");
         }
-    }
-
-    private Currency getCurrencyFromResultSet(ResultSet resultSet) throws SQLException {
-        return new Currency
-                (
-                        resultSet.getInt("ID"),
-                        resultSet.getString("Code"),
-                        resultSet.getString("FullName"),
-                        resultSet.getString("Sign")
-                );
-    }
-
-    private boolean isResultNotFound(ResultSet resultSet) throws SQLException {
-        return !resultSet.next();
     }
 }

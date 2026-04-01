@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.currency_exchange.ResponseEntity;
 import org.example.currency_exchange.commons.BaseHttpServlet;
+import org.example.currency_exchange.commons.ServletUtil;
 import org.example.currency_exchange.currency.CurrencyExceptionHandler;
 import org.example.currency_exchange.currency.dto.CurrencyAdditionDTO;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
@@ -37,7 +38,7 @@ public class CurrenciesServlet extends BaseHttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            Map<String, String> parameters = getParametersFromRequest(request);
+            Map<String, String> parameters = ServletUtil.getParametersFromRequest(request);
             CurrencyAdditionDTO currencyAdditionDTO = convertMapToDto(parameters);
             CurrencyDTO currencyDTO = currencyService.addCurrency(currencyAdditionDTO);
             sendSuccessfulResponse(currencyDTO, response);

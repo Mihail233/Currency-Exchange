@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface CurrencyDAO<T> {
     public List<T> findCurrencies() throws DataBaseUnavailableException;
-    public T findByCode(String code) throws DataBaseUnavailableException, CurrencyNotFoundException;
+    public T findCurrencyByCode(String currencyCode) throws DataBaseUnavailableException, CurrencyNotFoundException;
     public Currency saveCurrency(Currency currency) throws DataBaseUnavailableException, CurrencyWithThisCodeExistsException;
 }

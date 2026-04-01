@@ -19,7 +19,7 @@ public class CurrencySubService {
 
     public CurrencyDTO getCurrency(CodeDTO codeDTO) throws DataBaseUnavailableException, CurrencyNotFoundException {
         String currencyCode = codeDTO.code();
-        Currency currency = currencyDAO.findByCode(currencyCode);
+        Currency currency = currencyDAO.findCurrencyByCode(currencyCode);
         return objectDtoMapper.objectToDto(currency);
     }
 }
