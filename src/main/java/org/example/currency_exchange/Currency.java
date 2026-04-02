@@ -1,4 +1,4 @@
-package org.example.currency_exchange.currency;
+package org.example.currency_exchange;
 
 public class Currency {
     private Integer id;

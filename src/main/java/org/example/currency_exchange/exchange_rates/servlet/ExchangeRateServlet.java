@@ -7,7 +7,7 @@ import org.example.currency_exchange.ResponseEntity;
 import org.example.currency_exchange.commons.BaseHttpServlet;
 import org.example.currency_exchange.commons.ExceptionHandler;
 import org.example.currency_exchange.commons.ObjectDtoMapper;
-import org.example.currency_exchange.commons.ServletUtil;
+import org.example.currency_exchange.util.ServletUtil;
 import org.example.currency_exchange.exchange_rates.ExchangeRateHandler;
 import org.example.currency_exchange.exchange_rates.dto.CurrencyPairDTO;
 import org.example.currency_exchange.exchange_rates.dto.ExchangeRateDTO;
@@ -19,8 +19,8 @@ import java.io.IOException;
 @WebServlet(name = "ExchangeRateServlet", value = "/exchangeRate/*")
 public class ExchangeRateServlet extends BaseHttpServlet {
     private final ObjectDtoMapper<String, CurrencyPairDTO> objectDtoMapper = new CurrencyPairMapper();
-    private final ExceptionHandler exceptionHandler = new ExchangeRateHandler();
     private final ExchangeRateService exchangeRateService = new ExchangeRateService();
+    private final ExceptionHandler exceptionHandler = new ExchangeRateHandler();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {

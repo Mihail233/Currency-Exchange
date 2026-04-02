@@ -1,7 +1,7 @@
 package org.example.currency_exchange.exchange_rates.mapper;
 
 import org.example.currency_exchange.commons.ObjectDtoMapper;
-import org.example.currency_exchange.currency.Currency;
+import org.example.currency_exchange.Currency;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
 import org.example.currency_exchange.currency.mapper.CurrencyMapper;
 import org.example.currency_exchange.exchange_rates.ExchangeRate;

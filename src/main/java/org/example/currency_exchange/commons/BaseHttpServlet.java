@@ -21,8 +21,4 @@ public abstract class BaseHttpServlet extends HttpServlet {
         int code = HttpServletResponse.SC_OK;
         sendResponse(code, json, response);
     }
-
-    protected JsonConverter getJsonConverter() {
-        return jsonConverter;
-    }
 }

@@ -7,7 +7,7 @@ import org.example.currency_exchange.ResponseEntity;
 import org.example.currency_exchange.commons.BaseHttpServlet;
 import org.example.currency_exchange.commons.ExceptionHandler;
 import org.example.currency_exchange.commons.ObjectDtoMapper;
-import org.example.currency_exchange.commons.ServletUtil;
+import org.example.currency_exchange.util.ServletUtil;
 import org.example.currency_exchange.currency.CurrencyExceptionHandler;
 import org.example.currency_exchange.currency.dto.CodeDTO;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
@@ -15,8 +15,6 @@ import org.example.currency_exchange.currency.mapper.CodeMapper;
 import org.example.currency_exchange.currency.service.CurrencyService;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 @WebServlet(name = "CurrencyServlet", value = "/currency/*")
 public class CurrencyServlet extends BaseHttpServlet {

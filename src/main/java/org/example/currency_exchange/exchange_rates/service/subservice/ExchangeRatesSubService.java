@@ -2,10 +2,15 @@ package org.example.currency_exchange.exchange_rates.service.subservice;
 
 import org.example.currency_exchange.commons.ObjectDtoMapper;
 import org.example.currency_exchange.commons.dao.ExchangeRateDAO;
+import org.example.currency_exchange.exception_and_error.CurrencyPairWithThisCodeAlreadyExists;
+import org.example.currency_exchange.exception_and_error.CurrencyWithThisCodeExistsException;
 import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
+import org.example.currency_exchange.exception_and_error.OneOrBothCurrenciesFromPairNotExistInDatabase;
 import org.example.currency_exchange.exchange_rates.ExchangeRate;
+import org.example.currency_exchange.exchange_rates.dto.ExchangeRateAdditionDTO;
 import org.example.currency_exchange.exchange_rates.dto.ExchangeRateDTO;
 import org.example.currency_exchange.exchange_rates.mapper.ExchangeRateMapper;
+import org.example.currency_exchange.Currency;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,5 +35,13 @@ public class ExchangeRatesSubService {
             exchangeRateDTOs.add(exchangeRateDTO);
         }
         return exchangeRateDTOs;
+    }
+
+    public ExchangeRateDTO addExchangeRate(ExchangeRateAdditionDTO exchangeRateAdditionDTO) throws DataBaseUnavailableException, OneOrBothCurrenciesFromPairNotExistInDatabase, CurrencyPairWithThisCodeAlreadyExists {
+        String baseCurrencyCode = exchangeRateAdditionDTO.baseCurrencyCode();
+        String targetCurrencyCode = exchangeRateAdditionDTO.targetCurrencyCode();
+
+        ExchangeRate exchangeRate = exchangeRateDAO.saveExchangeRate(baseCurrencyCode, targetCurrencyCode, exchangeRateAdditionDTO.rate());
+        return objectDtoMapper.objectToDto(exchangeRate);
     }
 }

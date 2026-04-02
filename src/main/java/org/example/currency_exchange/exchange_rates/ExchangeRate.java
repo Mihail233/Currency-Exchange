@@ -1,17 +1,17 @@
 package org.example.currency_exchange.exchange_rates;
 
-import org.example.currency_exchange.currency.Currency;
+import org.example.currency_exchange.Currency;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class ExchangeRate {
-    private int id;
-    private Currency baseCurrency;
-    private Currency targetCurrency;
-    private BigDecimal rate;
+    private final Integer id;
+    private final Currency baseCurrency;
+    private final Currency targetCurrency;
+    private final BigDecimal rate;
 
-    public ExchangeRate(int id, Currency baseCurrency, Currency targetCurrency, String rate) {
+    public ExchangeRate(Integer id, Currency baseCurrency, Currency targetCurrency, String rate) {
         this.id = id;
         this.baseCurrency = baseCurrency;
         this.targetCurrency = targetCurrency;

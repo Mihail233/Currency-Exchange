@@ -1,14 +1,14 @@
 package org.example.currency_exchange.currency;
 
+import org.example.currency_exchange.Currency;
 import org.example.currency_exchange.HikariPool;
-import org.example.currency_exchange.commons.JdbcSqliteUtil;
 import org.example.currency_exchange.commons.dao.CurrencyDAO;
 import org.example.currency_exchange.exception_and_error.CurrencyNotFoundException;
 import org.example.currency_exchange.exception_and_error.CurrencyWithThisCodeExistsException;
 import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
+import org.example.currency_exchange.util.JdbcSqliteUtil;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
@@ -20,13 +20,7 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
             String query = "select * from Currencies";
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-
-            List<Currency> currencies = new ArrayList<>();
-            while (resultSet.next()) {
-                Currency currency = JdbcSqliteUtil.getCurrencyFromResultSet(resultSet);
-                currencies.add(currency);
-            }
-            return currencies;
+            return JdbcSqliteUtil.getCurrenciesFromResultSet(resultSet);
         } catch (SQLException e) {
             throw new DataBaseUnavailableException("База данных недоступна");
         }
@@ -61,8 +55,8 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
             String query = """
                     
                     insert into Currencies (Code, FullName, Sign)
-                    select (?), (?), (?) from Currencies
-                    where not exists (select Code from Currencies where Code = (?))
+                    select (?), (?), (?)
+                    where not exists (select 1 from Currencies where Code = (?))
                     limit 1
                     Returning *
                     """;

@@ -5,7 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.currency_exchange.ResponseEntity;
 import org.example.currency_exchange.commons.BaseHttpServlet;
-import org.example.currency_exchange.commons.ServletUtil;
+import org.example.currency_exchange.commons.ExceptionHandler;
+import org.example.currency_exchange.util.ServletUtil;
 import org.example.currency_exchange.currency.CurrencyExceptionHandler;
 import org.example.currency_exchange.currency.dto.CurrencyAdditionDTO;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
@@ -24,14 +25,14 @@ import java.util.Map;
 @WebServlet(name = "CurrenciesServlet", value = "/currencies")
 public class CurrenciesServlet extends BaseHttpServlet {
     private final CurrencyService currencyService = new CurrencyService();
-    private final CurrencyExceptionHandler currencyExceptionHandler = new CurrencyExceptionHandler();
+    private final ExceptionHandler exceptionHandler = new CurrencyExceptionHandler();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             List<CurrencyDTO> currencyDTOs = currencyService.getCurrencies();
             sendSuccessfulResponse(currencyDTOs, response);
         } catch (IOException e) {
-            ResponseEntity responseEntity = currencyExceptionHandler.catchException(e);
+            ResponseEntity responseEntity = exceptionHandler.catchException(e);
             sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);
         }
     }
@@ -43,7 +44,7 @@ public class CurrenciesServlet extends BaseHttpServlet {
             CurrencyDTO currencyDTO = currencyService.addCurrency(currencyAdditionDTO);
             sendSuccessfulResponse(currencyDTO, response);
         } catch (IOException e) {
-            ResponseEntity responseEntity = currencyExceptionHandler.catchException(e);
+            ResponseEntity responseEntity = exceptionHandler.catchException(e);
             sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);
         }
     }
@@ -51,7 +52,7 @@ public class CurrenciesServlet extends BaseHttpServlet {
     //кастомный под каждый сервлет?
     private CurrencyAdditionDTO convertMapToDto(Map<String, String> parameters) throws RequiredFormFieldMissException {
         try {
-            return getJsonConverter().getMapper().convertValue(parameters, CurrencyAdditionDTO.class);
+            return ServletUtil.getJsonConverter().getMapper().convertValue(parameters, CurrencyAdditionDTO.class);
         } catch (RuntimeException e) {
             //порядок не решает, illegalArgumentException - если не те аргументы были переданы
             throw new RequiredFormFieldMissException("Отсутсвтвует нужное поле формы");

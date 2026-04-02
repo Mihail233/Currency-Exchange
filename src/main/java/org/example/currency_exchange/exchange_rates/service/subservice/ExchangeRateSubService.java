@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExchangeRateSubService {
+    private final ExchangeRateDAO<ExchangeRate> exchangeRateDAO;
     private final ObjectDtoMapper<String, CurrencyPairDTO> objectDtoPairMapper = new CurrencyPairMapper();
     private final ObjectDtoMapper<ExchangeRate, ExchangeRateDTO> objectDtoExchangeRateMapper = new ExchangeRateMapper();
-    private final ExchangeRateDAO<ExchangeRate> exchangeRateDAO;
 
     public ExchangeRateSubService(ExchangeRateDAO<ExchangeRate> exchangeRateDAO) {
         this.exchangeRateDAO = exchangeRateDAO;

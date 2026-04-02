@@ -1,18 +1,29 @@
-package org.example.currency_exchange.commons;
+package org.example.currency_exchange.util;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.example.currency_exchange.Currency;
+import org.example.currency_exchange.JsonConverter;
 import org.example.currency_exchange.exception_and_error.InvalidParameterInPathException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ServletUtil {
+    private static final JsonConverter JSON_CONVERTER = new JsonConverter();
+
+    public static JsonConverter getJsonConverter() {
+        return JSON_CONVERTER;
+    }
+
     public static Map<String, String> getParametersFromRequest(HttpServletRequest request) throws IOException {
         String body = getBodyFromRequest(request);
         String encodeBody = decodeBody(body);
@@ -43,20 +54,20 @@ public class ServletUtil {
 
     public static String getParameterFromPath(String path) throws InvalidParameterInPathException {
         //если /currency, не /currency/ -> кидает path == null
-        String pathSeparator = "/";
-        List<String> pathComponents = Arrays.asList(path.split(pathSeparator));
-        return filterPathComponents(pathComponents);
+        String separator = "/";
+        List<String> pathParameters = Arrays.asList(path.split(separator));
+        return filterPathParameters(pathParameters);
     }
 
-    private static String filterPathComponents(List<String> pathComponents) throws InvalidParameterInPathException {
-        pathComponents = pathComponents.stream()
+    private static String filterPathParameters(List<String> pathParameters) throws InvalidParameterInPathException {
+        pathParameters = pathParameters.stream()
                 .filter(component -> !component.isEmpty())
                 .toList();
 
-        int allowedAmountPathComponents = 1;
-        if (pathComponents.size() != allowedAmountPathComponents) {
+        int allowedAPathParameters = 1;
+        if (pathParameters.size() != allowedAPathParameters) {
             throw new InvalidParameterInPathException("Не было передано параметра пути");
         }
-        return pathComponents.getFirst();
+        return pathParameters.getFirst();
     }
 }

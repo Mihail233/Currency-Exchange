@@ -21,11 +21,11 @@ public class ExceptionHandler {
         }
     }
 
-    public Map<String, ResponseEntity> getExceptions() {
+    private Map<String, ResponseEntity> getExceptions() {
         return exceptions;
     }
 
-    protected void loadErrorMessages(TypeException[] typeExceptions) throws JsonProcessingException {
+    private void loadErrorMessages(TypeException[] typeExceptions) throws JsonProcessingException {
         for (TypeException typeException: typeExceptions) {
             ResponseEntity responseEntity = typeException.getResponseEntity();
             String messageJson = jsonConverter.convertToJSON(responseEntity);
@@ -46,5 +46,4 @@ public class ExceptionHandler {
     private String getClassName(IOException exception) {
         return exception.getClass().getSimpleName();
     }
-
 }
