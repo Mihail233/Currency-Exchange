@@ -9,6 +9,6 @@ public interface ExchangeRateDAO<T> {
     public List<T> findExchangeRates() throws DataBaseUnavailableException;
     public T findExchangeRateByCurrencyPair(String base, String target) throws DataBaseUnavailableException, ExchangeRateNotFoundException;
     //поменять
-    public ExchangeRate saveExchangeRate(String base, String target, String rate) throws DataBaseUnavailableException, OneOrBothCurrenciesFromPairNotExistInDatabase, CurrencyPairWithThisCodeAlreadyExists;
+    public ExchangeRate saveExchangeRate(ExchangeRate exchangeRate) throws DataBaseUnavailableException, CurrencyPairWithThisCodeAlreadyExists;
     public void updateExchangeRate();
 }

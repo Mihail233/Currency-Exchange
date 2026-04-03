@@ -3,7 +3,9 @@ package org.example.currency_exchange.exchange_rates;
 import org.example.currency_exchange.Currency;
 import org.example.currency_exchange.HikariPool;
 import org.example.currency_exchange.commons.dao.ExchangeRateDAO;
-import org.example.currency_exchange.exception_and_error.*;
+import org.example.currency_exchange.exception_and_error.CurrencyPairWithThisCodeAlreadyExists;
+import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
+import org.example.currency_exchange.exception_and_error.ExchangeRateNotFoundException;
 import org.example.currency_exchange.util.JdbcSqliteUtil;
 
 import java.sql.*;
@@ -14,20 +16,29 @@ public class JdbcSqliteExchangeRate implements ExchangeRateDAO<ExchangeRate> {
     @Override
     public List<ExchangeRate> findExchangeRates() throws DataBaseUnavailableException {
         try (Connection connection = HikariPool.getConnection()) {
-            connection.setAutoCommit(false);
-
-            String queryToExchangeRate = """
-                                select * from ExchangeRates
+            String query = """
+                                select er.ID,
+                                c1.ID as baseID,
+                                c1.FullName as baseFullName,
+                                c1.code as baseCode,
+                                c1.sign as baseSign,
+                                c2.ID as targetID,
+                                c2.FullName as targetFullName,
+                                c2.code as targetCode,
+                                c2.sign as targetSign,
+                                er.Rate
+                                from ExchangeRates as er
+                                join Currencies c1 on c1.ID = er.BaseCurrencyId
+                                join Currencies c2 on c2.ID = er.TargetCurrencyId
                     """;
             Statement statement = connection.createStatement();
-            ResultSet exchangeRateResultSet = statement.executeQuery(queryToExchangeRate);
+            ResultSet resultSet = statement.executeQuery(query);
 
             List<ExchangeRate> exchangeRates = new ArrayList<>();
-            while (exchangeRateResultSet.next()) {
-                exchangeRates.add(getExchangeRateFromResultSet(exchangeRateResultSet, connection));
+            while (resultSet.next()) {
+                ExchangeRate exchangeRate = getExchangeRateFromResultSet(resultSet);
+                exchangeRates.add(exchangeRate);
             }
-
-            connection.commit();
             return exchangeRates;
         } catch (SQLException e) {
             throw new DataBaseUnavailableException("База данных недоступна");
@@ -37,12 +48,22 @@ public class JdbcSqliteExchangeRate implements ExchangeRateDAO<ExchangeRate> {
     @Override
     public ExchangeRate findExchangeRateByCurrencyPair(String base, String target) throws DataBaseUnavailableException, ExchangeRateNotFoundException {
         try (Connection connection = HikariPool.getConnection()) {
-            connection.setAutoCommit(false);
 
             String query = """
-                    select * from ExchangeRates
-                    where BaseCurrencyId  = (Select id from Currencies where Code = (?))
-                    and TargetCurrencyId = (Select id from Currencies where Code = (?));
+                    select er.ID,
+                    c1.ID as baseID,
+                    c1.FullName as baseFullName,
+                    c1.code as baseCode,
+                    c1.sign as baseSign,
+                    c2.ID as targetID,
+                    c2.FullName as targetFullName,
+                    c2.code as targetCode,
+                    c2.sign as targetSign,
+                    er.Rate
+                    from ExchangeRates as er
+                    join Currencies c1 on c1.ID = er.BaseCurrencyId
+                    join Currencies c2 on c2.ID = er.TargetCurrencyId
+                    where baseCode = (?) and targetCode = (?);
                     """;
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, base);
@@ -53,53 +74,43 @@ public class JdbcSqliteExchangeRate implements ExchangeRateDAO<ExchangeRate> {
                 throw new ExchangeRateNotFoundException("Обменный курс для пары не найден");
             }
 
-            return getExchangeRateFromResultSet(resultSet, connection);
+            return getExchangeRateFromResultSet(resultSet);
         } catch (SQLException e) {
             throw new DataBaseUnavailableException("База данных недоступна");
         }
     }
 
     @Override
-    public ExchangeRate saveExchangeRate(String base, String target, String rate) throws DataBaseUnavailableException, OneOrBothCurrenciesFromPairNotExistInDatabase, CurrencyPairWithThisCodeAlreadyExists {
+    public ExchangeRate saveExchangeRate(ExchangeRate exchangeRate) throws DataBaseUnavailableException, CurrencyPairWithThisCodeAlreadyExists {
         try (Connection connection = HikariPool.getConnection()) {
-            //проверка на количество записей (2)
-            //вставка с ретернингом -> если запись уже была не вставиться
-            String queryToCurrencies = """
-                    select * from Currencies
-                    where code = (?) or code = (?)
-                    """;
-            PreparedStatement preparedStatementToCurrencies = connection.prepareStatement(queryToCurrencies);
-            preparedStatementToCurrencies.setString(1, base);
-            preparedStatementToCurrencies.setString(2, target);
-            ResultSet resultSetFromCurrencies = preparedStatementToCurrencies.executeQuery();
-
-            //а если вернуть Currency и пройти по массиву, и просто вернуть IDs
-            int requiredCountOfCurrency = 2;
-            List<Currency> currencies = JdbcSqliteUtil.getCurrenciesFromResultSet(resultSetFromCurrencies);
-            checkForRequiredCount(requiredCountOfCurrency, currencies);
-            int baseId = getIdFromCurrenciesByCode(currencies, base);
-            int targetId = getIdFromCurrenciesByCode(currencies, target);
-
             String queryToExchangeRates = """
                     insert into ExchangeRates (BaseCurrencyId, TargetCurrencyId, Rate)
                     select (?), (?), (?)
                     where not exists (select 1 from ExchangeRates where BaseCurrencyId = (?) AND TargetCurrencyId = (?))
                     limit 1
-                    Returning *
+                    Returning ID
                     """;
-            PreparedStatement preparedStatementToExchangeRates = connection.prepareStatement(queryToExchangeRates);
-            preparedStatementToExchangeRates.setInt(1, baseId);
-            preparedStatementToExchangeRates.setInt(2, targetId);
-            preparedStatementToExchangeRates.setString(3, rate);
-            preparedStatementToExchangeRates.setInt(4, baseId);
-            preparedStatementToExchangeRates.setInt(5, targetId);
+            PreparedStatement preparedStatement = connection.prepareStatement(queryToExchangeRates);
 
-            ResultSet resultSetFromExchangeRate = preparedStatementToExchangeRates.executeQuery();
+            int baseId = exchangeRate.getBaseCurrency().getId();
+            int targetId = exchangeRate.getTargetCurrency().getId();
+            String rate = exchangeRate.getRate().toString();
 
-            if (JdbcSqliteUtil.isResultNotFound(resultSetFromExchangeRate)) {
+            preparedStatement.setInt(1, baseId);
+            preparedStatement.setInt(2, targetId);
+            preparedStatement.setString(3, rate);
+            preparedStatement.setInt(4, baseId);
+            preparedStatement.setInt(5, targetId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (JdbcSqliteUtil.isResultNotFound(resultSet)) {
                 throw new CurrencyPairWithThisCodeAlreadyExists("Текущая пара уже существует");
             }
-            return getExchangeRateFromResultSet(resultSetFromExchangeRate, connection);
+
+            int exchangeRateId = resultSet.getInt("ID");
+            exchangeRate.setId(exchangeRateId);
+            return exchangeRate;
         } catch (SQLException e) {
             throw new DataBaseUnavailableException("База данных недоступна");
         }
@@ -110,42 +121,22 @@ public class JdbcSqliteExchangeRate implements ExchangeRateDAO<ExchangeRate> {
 
     }
 
-    private ExchangeRate getExchangeRateFromResultSet(ResultSet resultSet, Connection connection) throws SQLException {
-        int id = resultSet.getInt("ID");
-        String rate = resultSet.getString("Rate");
-        int baseCurrencyId = resultSet.getInt("BaseCurrencyId");
-        int targetCurrencyId = resultSet.getInt("TargetCurrencyId");
-
-        Currency baseCurrency = findCurrencyById(baseCurrencyId, connection);
-        Currency targetCurrency = findCurrencyById(targetCurrencyId, connection);
-
-        return new ExchangeRate(id, baseCurrency, targetCurrency, rate);
-    }
-
-    private Currency findCurrencyById(int currencyId, Connection connection) throws SQLException {
-        String queryWithCurrencyId = """
-                            select * from Currencies
-                            where ID = (?)
-                """;
-        PreparedStatement preparedStatement = connection.prepareStatement(queryWithCurrencyId);
-        preparedStatement.setInt(1, currencyId);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        return JdbcSqliteUtil.getCurrencyFromResultSet(resultSet);
-    }
-
-    private void checkForRequiredCount(int requiredCountOfCurrency, List<Currency> currencyPair) throws OneOrBothCurrenciesFromPairNotExistInDatabase {
-        if (currencyPair.size() != requiredCountOfCurrency) {
-            throw new OneOrBothCurrenciesFromPairNotExistInDatabase("Не найдено одна или обе валюты");
-        }
-    }
-
-    private int getIdFromCurrenciesByCode(List<Currency> currencies, String currencyCode) {
-        int id = -1;
-        for (Currency currency: currencies) {
-            if (currency.getCode().equals(currencyCode)) {
-                id = currency.getId();
-            }
-        }
-        return id;
+    private ExchangeRate getExchangeRateFromResultSet(ResultSet resultSet) throws SQLException {
+        String base = "base";
+        String target = "target";
+        return new ExchangeRate(
+                resultSet.getInt("ID"),
+                new Currency(resultSet.getInt(base + "ID"),
+                        resultSet.getString(base + "FullName"),
+                        resultSet.getString(base + "Code"),
+                        resultSet.getString(base + "Sign")
+                ),
+                new Currency(resultSet.getInt(target + "ID"),
+                        resultSet.getString(target + "FullName"),
+                        resultSet.getString(target + "Code"),
+                        resultSet.getString(target + "Sign")
+                ),
+                resultSet.getString("Rate")
+        );
     }
 }

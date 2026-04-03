@@ -47,8 +47,6 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
         }
     }
 
-    //делается сложный запрос select + insert, при этом возращается результат вставки -> если ничего не найдено, то не ставлено?
-    //выполнить запрос если count(*) < 1,
     @Override
     public Currency saveCurrency(Currency currency) throws DataBaseUnavailableException, CurrencyWithThisCodeExistsException {
         try (Connection connection = HikariPool.getConnection()) {
@@ -58,7 +56,7 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
                     select (?), (?), (?)
                     where not exists (select 1 from Currencies where Code = (?))
                     limit 1
-                    Returning *
+                    Returning ID
                     """;
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, currency.getCode());
@@ -70,7 +68,9 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
             if (JdbcSqliteUtil.isResultNotFound(resultSet)) {
                 throw new CurrencyWithThisCodeExistsException("Валюта с таким кодом уже существует");
             }
-            return JdbcSqliteUtil.getCurrencyFromResultSet(resultSet);
+            int id = resultSet.getInt("ID");
+            currency.setId(id);
+            return currency;
         } catch (SQLException e) {
             throw new DataBaseUnavailableException("База данных недоступна");
         }
