@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface ExchangeRateDAO<T> {
     public List<T> findExchangeRates() throws DataBaseUnavailableException;
-    public T findExchangeRateByCurrencyPair(String base, String target) throws DataBaseUnavailableException, ExchangeRateNotFoundException;
-    //поменять
+    public T findExchangeRateByCurrencyPair(String baseCurrency, String targetCurrency) throws DataBaseUnavailableException, ExchangeRateNotFoundException;
     public ExchangeRate saveExchangeRate(ExchangeRate exchangeRate) throws DataBaseUnavailableException, CurrencyPairWithThisCodeAlreadyExists;
-    public void updateExchangeRate();
+    //поменять???
+    public ExchangeRate updateExchangeRate(ExchangeRate exchangeRate) throws DataBaseUnavailableException, CurrencyNotFoundException, ExchangeRateNotFoundException;
 }

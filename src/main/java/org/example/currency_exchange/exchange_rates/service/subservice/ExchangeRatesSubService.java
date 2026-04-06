@@ -7,7 +7,6 @@ import org.example.currency_exchange.commons.dao.ExchangeRateDAO;
 import org.example.currency_exchange.exception_and_error.CurrencyNotFoundException;
 import org.example.currency_exchange.exception_and_error.CurrencyPairWithThisCodeAlreadyExists;
 import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
-import org.example.currency_exchange.exception_and_error.OneOrBothCurrenciesFromPairNotExistInDatabase;
 import org.example.currency_exchange.exchange_rates.ExchangeRate;
 import org.example.currency_exchange.exchange_rates.dto.ExchangeRateAdditionDTO;
 import org.example.currency_exchange.exchange_rates.dto.ExchangeRateDTO;
@@ -41,6 +40,7 @@ public class ExchangeRatesSubService {
     }
 
     public ExchangeRateDTO addExchangeRate(ExchangeRateAdditionDTO exchangeRateAdditionDTO) throws DataBaseUnavailableException, CurrencyNotFoundException, CurrencyPairWithThisCodeAlreadyExists {
+        //возникает raceCondition, но при этом если бы вставляли запись и была бы конкретная ошибка вместо SqlException, то можно было это избежать(вставка на индекс-поля, их нет -> возрат ошибки)
         Currency baseCurrency = currencyDAO.findCurrencyByCode(exchangeRateAdditionDTO.baseCurrencyCode());
         Currency targetCurrency = currencyDAO.findCurrencyByCode(exchangeRateAdditionDTO.targetCurrencyCode());
 

@@ -3,6 +3,7 @@ package org.example.currency_exchange.exchange_rates;
 import org.example.currency_exchange.Currency;
 import org.example.currency_exchange.HikariPool;
 import org.example.currency_exchange.commons.dao.ExchangeRateDAO;
+import org.example.currency_exchange.exception_and_error.CurrencyNotFoundException;
 import org.example.currency_exchange.exception_and_error.CurrencyPairWithThisCodeAlreadyExists;
 import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
 import org.example.currency_exchange.exception_and_error.ExchangeRateNotFoundException;
@@ -46,7 +47,7 @@ public class JdbcSqliteExchangeRate implements ExchangeRateDAO<ExchangeRate> {
     }
 
     @Override
-    public ExchangeRate findExchangeRateByCurrencyPair(String base, String target) throws DataBaseUnavailableException, ExchangeRateNotFoundException {
+    public ExchangeRate findExchangeRateByCurrencyPair(String baseCurrency, String targetCurrency) throws DataBaseUnavailableException, ExchangeRateNotFoundException {
         try (Connection connection = HikariPool.getConnection()) {
 
             String query = """
@@ -66,8 +67,8 @@ public class JdbcSqliteExchangeRate implements ExchangeRateDAO<ExchangeRate> {
                     where baseCode = (?) and targetCode = (?);
                     """;
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, base);
-            preparedStatement.setString(2, target);
+            preparedStatement.setString(1, baseCurrency);
+            preparedStatement.setString(2, targetCurrency);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (JdbcSqliteUtil.isResultNotFound(resultSet)) {
@@ -83,14 +84,14 @@ public class JdbcSqliteExchangeRate implements ExchangeRateDAO<ExchangeRate> {
     @Override
     public ExchangeRate saveExchangeRate(ExchangeRate exchangeRate) throws DataBaseUnavailableException, CurrencyPairWithThisCodeAlreadyExists {
         try (Connection connection = HikariPool.getConnection()) {
-            String queryToExchangeRates = """
+            String query = """
                     insert into ExchangeRates (BaseCurrencyId, TargetCurrencyId, Rate)
                     select (?), (?), (?)
                     where not exists (select 1 from ExchangeRates where BaseCurrencyId = (?) AND TargetCurrencyId = (?))
                     limit 1
                     Returning ID
                     """;
-            PreparedStatement preparedStatement = connection.prepareStatement(queryToExchangeRates);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
 
             int baseId = exchangeRate.getBaseCurrency().getId();
             int targetId = exchangeRate.getTargetCurrency().getId();
@@ -117,8 +118,38 @@ public class JdbcSqliteExchangeRate implements ExchangeRateDAO<ExchangeRate> {
     }
 
     @Override
-    public void updateExchangeRate() {
+    public ExchangeRate updateExchangeRate(ExchangeRate exchangeRate) throws DataBaseUnavailableException, ExchangeRateNotFoundException  {
+        try (Connection connection = HikariPool.getConnection()) {
+            String query = """
+                    update ExchangeRates
+                    Set Rate = (?)
+                    where BaseCurrencyId = (?) AND TargetCurrencyId = (?)
+                    RETURNING ID;
+                    """;
 
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            int baseId = exchangeRate.getBaseCurrency().getId();
+            int targetId = exchangeRate.getTargetCurrency().getId();
+            String rate = exchangeRate.getRate().toString();
+
+            preparedStatement.setString(1, rate);
+            preparedStatement.setInt(2, baseId);
+            preparedStatement.setInt(3, targetId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (JdbcSqliteUtil.isResultNotFound(resultSet)) {
+                throw new ExchangeRateNotFoundException("Валютная пара не существует");
+            }
+
+            int exchangeRateId = resultSet.getInt("ID");
+            exchangeRate.setId(exchangeRateId);
+            return exchangeRate;
+        } catch (SQLException e) {
+            throw new DataBaseUnavailableException("База данных недоступна");
+        }
     }
 
     private ExchangeRate getExchangeRateFromResultSet(ResultSet resultSet) throws SQLException {

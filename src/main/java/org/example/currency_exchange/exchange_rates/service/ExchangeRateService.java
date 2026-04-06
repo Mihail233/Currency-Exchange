@@ -13,6 +13,7 @@ import org.example.currency_exchange.exchange_rates.JdbcSqliteExchangeRate;
 import org.example.currency_exchange.exchange_rates.dto.CurrencyPairDTO;
 import org.example.currency_exchange.exchange_rates.dto.ExchangeRateAdditionDTO;
 import org.example.currency_exchange.exchange_rates.dto.ExchangeRateDTO;
+import org.example.currency_exchange.exchange_rates.dto.ExchangeRateUpdateDTO;
 import org.example.currency_exchange.exchange_rates.service.subservice.ExchangeRateSubService;
 import org.example.currency_exchange.exchange_rates.service.subservice.ExchangeRatesSubService;
 
@@ -23,7 +24,7 @@ public class ExchangeRateService {
     private final ExchangeRateDAO<ExchangeRate> exchangeRateDAO = new JdbcSqliteExchangeRate();
     private final CurrencyDAO<Currency> currencyDAO = new JdbcSqliteCurrencyDAO();
     private final ExchangeRatesSubService exchangeRatesSubService = new ExchangeRatesSubService(exchangeRateDAO, currencyDAO);
-    private final ExchangeRateSubService exchangeRateSubService = new ExchangeRateSubService(exchangeRateDAO);
+    private final ExchangeRateSubService exchangeRateSubService = new ExchangeRateSubService(exchangeRateDAO, currencyDAO);
 
     public List<ExchangeRateDTO> getExchangeRates() throws DataBaseUnavailableException {
         return exchangeRatesSubService.getExchangeRates();
@@ -35,5 +36,9 @@ public class ExchangeRateService {
 
     public ExchangeRateDTO addExchangeRate(ExchangeRateAdditionDTO exchangeRateAdditionDTO) throws DataBaseUnavailableException, CurrencyNotFoundException, CurrencyPairWithThisCodeAlreadyExists {
         return exchangeRatesSubService.addExchangeRate(exchangeRateAdditionDTO);
+    }
+
+    public ExchangeRateDTO updateExchangeRate(ExchangeRateUpdateDTO exchangeRateUpdateDTO) throws DataBaseUnavailableException, CurrencyNotFoundException, ExchangeRateNotFoundException {
+        return exchangeRateSubService.updateExchangeRate(exchangeRateUpdateDTO);
     }
 }

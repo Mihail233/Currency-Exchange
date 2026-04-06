@@ -24,7 +24,7 @@ public class ServletUtil {
         return JSON_CONVERTER;
     }
 
-    public static Map<String, String> getParametersFromRequest(HttpServletRequest request) throws IOException {
+    public static Map<String, String> getParametersFromBody(HttpServletRequest request) throws IOException {
         String body = getBodyFromRequest(request);
         String encodeBody = decodeBody(body);
         return convertBodyToMap(encodeBody);

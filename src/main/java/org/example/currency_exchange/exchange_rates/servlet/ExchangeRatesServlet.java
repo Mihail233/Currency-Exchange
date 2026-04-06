@@ -33,9 +33,8 @@ public class ExchangeRatesServlet extends BaseHttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         try {
-            Map<String, String> parameters = ServletUtil.getParametersFromRequest(request);
+            Map<String, String> parameters = ServletUtil.getParametersFromBody(request);
             ExchangeRateAdditionDTO exchangeRateAdditionDTO = convertMapToDto(parameters);
             ExchangeRateDTO exchangeRateDTO = exchangeRateService.addExchangeRate(exchangeRateAdditionDTO);
             sendSuccessfulResponse(exchangeRateDTO, response);

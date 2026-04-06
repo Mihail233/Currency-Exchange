@@ -39,7 +39,7 @@ public class CurrenciesServlet extends BaseHttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            Map<String, String> parameters = ServletUtil.getParametersFromRequest(request);
+            Map<String, String> parameters = ServletUtil.getParametersFromBody(request);
             CurrencyAdditionDTO currencyAdditionDTO = convertMapToDto(parameters);
             CurrencyDTO currencyDTO = currencyService.addCurrency(currencyAdditionDTO);
             sendSuccessfulResponse(currencyDTO, response);
