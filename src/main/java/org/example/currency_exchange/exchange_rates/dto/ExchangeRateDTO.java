@@ -4,5 +4,5 @@ import org.example.currency_exchange.Currency;
 
 import java.math.BigDecimal;
 
-public record ExchangeRateDTO(int id, Currency baseCurrency, Currency targetCurrency, BigDecimal rate) {
+public record ExchangeRateDTO(int id, Currency baseCurrency, Currency targetCurrency, String rate) {
 }

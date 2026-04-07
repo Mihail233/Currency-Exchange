@@ -1,0 +1,43 @@
+package org.example.currency_exchange.exchange.servlet;
+
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.example.currency_exchange.ResponseEntity;
+import org.example.currency_exchange.commons.BaseHttpServlet;
+import org.example.currency_exchange.commons.ExceptionHandler;
+import org.example.currency_exchange.exception_and_error.RequiredQueryParametersMissException;
+import org.example.currency_exchange.exchange.ExchangeHandler;
+import org.example.currency_exchange.exchange.dto.ExchangeDTO;
+import org.example.currency_exchange.exchange.dto.ExchangeRequestDTO;
+import org.example.currency_exchange.exchange.service.ExchangeService;
+import org.example.currency_exchange.util.ServletUtil;
+
+import java.io.IOException;
+import java.util.Map;
+
+@WebServlet(name = "ExchangeServlet", value = "/exchange")
+public class ExchangeServlet extends BaseHttpServlet {
+    private final ExchangeService exchangeService = new ExchangeService();
+    private final ExceptionHandler exceptionHandler = new ExchangeHandler();
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            Map<String, String> queryParameters = ServletUtil.getParametersFromQueryParameters(request.getQueryString());
+            ExchangeRequestDTO exchangeRequestDTO = convertMapToDto(queryParameters);
+            ExchangeDTO exchangeDTO = exchangeService.makeExchange(exchangeRequestDTO);
+            sendSuccessfulResponse(exchangeDTO, response);
+        } catch (IOException e) {
+            ResponseEntity responseEntity = exceptionHandler.catchException(e);
+            sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);
+        }
+    }
+
+    private ExchangeRequestDTO convertMapToDto(Map<String, String> queryParameters) throws RequiredQueryParametersMissException {
+        try {
+            return ServletUtil.getJsonConverter().getMapper().convertValue(queryParameters, ExchangeRequestDTO.class);
+        } catch (RuntimeException e) {
+            throw new RequiredQueryParametersMissException("Отсутствует нужное query параметр в пути");
+        }
+    }
+}

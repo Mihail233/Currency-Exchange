@@ -30,6 +30,10 @@ public class ServletUtil {
         return convertBodyToMap(encodeBody);
     }
 
+    public static Map<String, String> getParametersFromQueryParameters(String queryParameters) {
+        return convertBodyToMap(queryParameters);
+    }
+
     private static String decodeBody(String body) {
         return URLDecoder.decode(body, StandardCharsets.UTF_8);
     }
