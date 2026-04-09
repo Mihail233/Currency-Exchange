@@ -1,6 +1,5 @@
 package org.example.currency_exchange.exchange_rates.servlet;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,7 +37,7 @@ public class ExchangeRateServlet extends BaseHttpServlet {
         }
     }
 
-    protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String currencyPair = ServletUtil.getParameterFromPath(request.getPathInfo());
             Map<String, String> parameters = ServletUtil.getParametersFromBody(request);
