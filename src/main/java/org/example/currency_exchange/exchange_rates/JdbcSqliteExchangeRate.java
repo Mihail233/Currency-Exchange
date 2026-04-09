@@ -1,6 +1,6 @@
 package org.example.currency_exchange.exchange_rates;
 
-import org.example.currency_exchange.Currency;
+import org.example.currency_exchange.currency.Currency;
 import org.example.currency_exchange.HikariPool;
 import org.example.currency_exchange.commons.dao.ExchangeRateDAO;
 import org.example.currency_exchange.exception_and_error.CurrencyPairWithThisCodeAlreadyExists;
@@ -8,6 +8,7 @@ import org.example.currency_exchange.exception_and_error.DataBaseUnavailableExce
 import org.example.currency_exchange.exception_and_error.ExchangeRateNotFoundException;
 import org.example.currency_exchange.util.JdbcSqliteUtil;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,11 +95,11 @@ public class JdbcSqliteExchangeRate implements ExchangeRateDAO<ExchangeRate> {
 
             int baseId = exchangeRate.getBaseCurrency().getId();
             int targetId = exchangeRate.getTargetCurrency().getId();
-            String rate = exchangeRate.getRate();
+            BigDecimal rate = exchangeRate.getRate();
 
             preparedStatement.setInt(1, baseId);
             preparedStatement.setInt(2, targetId);
-            preparedStatement.setString(3, rate);
+            preparedStatement.setBigDecimal(3, rate);
             preparedStatement.setInt(4, baseId);
             preparedStatement.setInt(5, targetId);
 
@@ -131,9 +132,9 @@ public class JdbcSqliteExchangeRate implements ExchangeRateDAO<ExchangeRate> {
 
             int baseId = exchangeRate.getBaseCurrency().getId();
             int targetId = exchangeRate.getTargetCurrency().getId();
-            String rate = exchangeRate.getRate();
+            BigDecimal rate = exchangeRate.getRate();
 
-            preparedStatement.setString(1, rate);
+            preparedStatement.setBigDecimal(1, rate);
             preparedStatement.setInt(2, baseId);
             preparedStatement.setInt(3, targetId);
 
@@ -200,16 +201,16 @@ public class JdbcSqliteExchangeRate implements ExchangeRateDAO<ExchangeRate> {
         return new ExchangeRate(
                 resultSet.getInt("ID"),
                 new Currency(resultSet.getInt(base + "ID"),
-                        resultSet.getString(base + "Code"),
                         resultSet.getString(base + "FullName"),
+                        resultSet.getString(base + "Code"),
                         resultSet.getString(base + "Sign")
                 ),
                 new Currency(resultSet.getInt(target + "ID"),
-                        resultSet.getString(target + "Code"),
                         resultSet.getString(target + "FullName"),
+                        resultSet.getString(target + "Code"),
                         resultSet.getString(target + "Sign")
                 ),
-                resultSet.getString("Rate")
+                new BigDecimal(resultSet.getString("Rate"))
         );
     }
 

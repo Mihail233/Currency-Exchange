@@ -2,7 +2,7 @@ package org.example.currency_exchange.currency.service.subservice;
 
 import org.example.currency_exchange.commons.ObjectDtoMapper;
 import org.example.currency_exchange.commons.dao.CurrencyDAO;
-import org.example.currency_exchange.Currency;
+import org.example.currency_exchange.currency.Currency;
 import org.example.currency_exchange.currency.dto.CodeDTO;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
 import org.example.currency_exchange.currency.mapper.CurrencyMapper;

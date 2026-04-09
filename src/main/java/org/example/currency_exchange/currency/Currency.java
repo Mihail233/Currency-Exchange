@@ -1,10 +1,10 @@
-package org.example.currency_exchange;
+package org.example.currency_exchange.currency;
 
 public class Currency {
     private Integer id;
     private String name;
     private String code;
-    private String sign;
+    private final String sign;
 
     public Currency(Integer id, String name, String code, String sign) {
         this.id = id;
@@ -39,9 +39,5 @@ public class Currency {
 
     public String getSign() {
         return sign;
-    }
-
-    public void setSign(String sign) {
-        this.sign = sign;
     }
 }

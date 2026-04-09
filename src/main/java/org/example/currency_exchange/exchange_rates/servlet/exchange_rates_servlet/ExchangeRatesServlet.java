@@ -1,4 +1,4 @@
-package org.example.currency_exchange.exchange_rates.servlet;
+package org.example.currency_exchange.exchange_rates.servlet.exchange_rates_servlet;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,7 +7,6 @@ import org.example.currency_exchange.ResponseEntity;
 import org.example.currency_exchange.commons.BaseHttpServlet;
 import org.example.currency_exchange.commons.ExceptionHandler;
 import org.example.currency_exchange.exception_and_error.RequiredFormFieldMissException;
-import org.example.currency_exchange.exchange_rates.ExchangeRateHandler;
 import org.example.currency_exchange.exchange_rates.dto.ExchangeRateAdditionDTO;
 import org.example.currency_exchange.exchange_rates.dto.ExchangeRateDTO;
 import org.example.currency_exchange.exchange_rates.service.ExchangeRateService;
@@ -20,7 +19,7 @@ import java.util.Map;
 @WebServlet(name = "ExchangeRatesServlet", value = "/exchangeRates")
 public class ExchangeRatesServlet extends BaseHttpServlet {
     private final ExchangeRateService exchangeRateService = new ExchangeRateService();
-    private final ExceptionHandler exceptionHandler = new ExchangeRateHandler();
+    private final ExceptionHandler exceptionHandler = new ExceptionHandler(ExchangeRatesTypeException.values());
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {

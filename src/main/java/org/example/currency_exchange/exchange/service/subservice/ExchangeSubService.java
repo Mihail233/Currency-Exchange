@@ -1,6 +1,6 @@
 package org.example.currency_exchange.exchange.service.subservice;
 
-import org.example.currency_exchange.Currency;
+import org.example.currency_exchange.currency.Currency;
 import org.example.currency_exchange.commons.dao.ExchangeRateDAO;
 import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
 import org.example.currency_exchange.exception_and_error.ExchangeRateNotFoundException;
@@ -23,7 +23,7 @@ public class ExchangeSubService {
         String baseCurrencyCode = exchangeRequestDTO.from();
         String targetCurrencyCode = exchangeRequestDTO.to();
 
-        BigDecimal amount = new BigDecimal(exchangeRequestDTO.amount());
+        BigDecimal amount = exchangeRequestDTO.amount();
         return makeOneOfExchangeScenarios(baseCurrencyCode, targetCurrencyCode, amount);
     }
 
@@ -46,36 +46,36 @@ public class ExchangeSubService {
     }
 
     private ExchangeDTO makeDefaultExchange(BigDecimal amount, ExchangeRate exchangeRate) {
-        String rate = exchangeRate.getRate();
-        String convertedAmount = convertAmount(amount, new BigDecimal(rate));
+        BigDecimal rate = exchangeRate.getRate();
+        BigDecimal convertedAmount = convertAmount(amount, rate);
 
         return constructExchangeDTO(exchangeRate.getBaseCurrency(), exchangeRate.getTargetCurrency(), exchangeRate.getRate(), amount, convertedAmount);
     }
 
     private ExchangeDTO makeReverseExchange(BigDecimal amount, ExchangeRate exchangeRate) {
-        BigDecimal rate = new BigDecimal(exchangeRate.getRate());
+        BigDecimal rate = exchangeRate.getRate();
         BigDecimal reverseRate = getReverseRate(rate);
-        String convertedAmount = convertAmount(amount, reverseRate);
+        BigDecimal convertedAmount = convertAmount(amount, reverseRate);
 
-        return constructExchangeDTO(exchangeRate.getTargetCurrency(), exchangeRate.getBaseCurrency(), reverseRate.toPlainString(), amount, convertedAmount);
+        return constructExchangeDTO(exchangeRate.getTargetCurrency(), exchangeRate.getBaseCurrency(), reverseRate, amount, convertedAmount);
     }
 
     private ExchangeDTO makeIndirectExchange(String baseCurrencyCode, String targetCurrencyCode, BigDecimal amount, List<ExchangeRate> exchangeRates) {
         ExchangeRate fromExchangeRate = getFromOrToExchangeRate(baseCurrencyCode, exchangeRates);
         ExchangeRate toExchangeRate = getFromOrToExchangeRate(targetCurrencyCode, exchangeRates);
-        String fromRate = fromExchangeRate.getRate();
-        String toRate = toExchangeRate.getRate();
+        BigDecimal fromRate = fromExchangeRate.getRate();
+        BigDecimal toRate = toExchangeRate.getRate();
 
-        BigDecimal indirectRate = divideNumeratorByDenominator(new BigDecimal(fromRate), new BigDecimal(toRate));
-        String convertedAmount = convertAmount(amount, indirectRate);
+        BigDecimal indirectRate = divideNumeratorByDenominator(fromRate, toRate);
+        BigDecimal convertedAmount = convertAmount(amount, indirectRate);
 
-        return constructExchangeDTO(fromExchangeRate.getTargetCurrency(), toExchangeRate.getTargetCurrency(), indirectRate.toPlainString(), amount, convertedAmount);
+        return constructExchangeDTO(fromExchangeRate.getTargetCurrency(), toExchangeRate.getTargetCurrency(), indirectRate, amount, convertedAmount);
     }
 
     //0.0001 * 10 -> 0.01; 0.001 * 10 -> 0.01
-    private String convertAmount(BigDecimal amount, BigDecimal rate) {
+    private BigDecimal convertAmount(BigDecimal amount, BigDecimal rate) {
         BigDecimal convertedAmount = amount.multiply(rate);
-        return convertedAmount.setScale(ExchangeRate.SCALE, ExchangeRate.ROUNDING_MODE).stripTrailingZeros().toPlainString();
+        return convertedAmount.setScale(ExchangeRate.SCALE, ExchangeRate.ROUNDING_MODE);
     }
 
     private BigDecimal getReverseRate(BigDecimal rate) {
@@ -94,7 +94,7 @@ public class ExchangeSubService {
                 .get();
     }
 
-    private ExchangeDTO constructExchangeDTO(Currency baseCurrency, Currency targetCurrency, String rate, BigDecimal amount, String convertedAmount) {
-        return new ExchangeDTO(baseCurrency, targetCurrency, rate, amount.toPlainString(), convertedAmount);
+    private ExchangeDTO constructExchangeDTO(Currency baseCurrency, Currency targetCurrency, BigDecimal rate, BigDecimal amount, BigDecimal convertedAmount) {
+        return new ExchangeDTO(baseCurrency, targetCurrency, rate, amount, convertedAmount);
     }
 }

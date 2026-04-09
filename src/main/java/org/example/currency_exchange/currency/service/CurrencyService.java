@@ -2,7 +2,7 @@ package org.example.currency_exchange.currency.service;
 
 
 import org.example.currency_exchange.commons.dao.CurrencyDAO;
-import org.example.currency_exchange.Currency;
+import org.example.currency_exchange.currency.Currency;
 import org.example.currency_exchange.currency.JdbcSqliteCurrencyDAO;
 import org.example.currency_exchange.currency.dto.CodeDTO;
 import org.example.currency_exchange.currency.dto.CurrencyAdditionDTO;

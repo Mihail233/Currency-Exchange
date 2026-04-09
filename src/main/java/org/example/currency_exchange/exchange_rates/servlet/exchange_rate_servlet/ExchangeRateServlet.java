@@ -1,4 +1,4 @@
-package org.example.currency_exchange.exchange_rates.servlet;
+package org.example.currency_exchange.exchange_rates.servlet.exchange_rate_servlet;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,7 +8,6 @@ import org.example.currency_exchange.commons.BaseHttpServlet;
 import org.example.currency_exchange.commons.ExceptionHandler;
 import org.example.currency_exchange.commons.ObjectDtoMapper;
 import org.example.currency_exchange.exception_and_error.RequiredFormFieldMissException;
-import org.example.currency_exchange.exchange_rates.ExchangeRateHandler;
 import org.example.currency_exchange.exchange_rates.dto.CurrencyPairDTO;
 import org.example.currency_exchange.exchange_rates.dto.ExchangeRateDTO;
 import org.example.currency_exchange.exchange_rates.dto.ExchangeRateUpdateDTO;
@@ -23,7 +22,7 @@ import java.util.Map;
 public class ExchangeRateServlet extends BaseHttpServlet {
     private final ObjectDtoMapper<String, CurrencyPairDTO> objectDtoMapper = new CurrencyPairMapper();
     private final ExchangeRateService exchangeRateService = new ExchangeRateService();
-    private final ExceptionHandler exceptionHandler = new ExchangeRateHandler();
+    private final ExceptionHandler exceptionHandler = new ExceptionHandler(ExchangeRateTypeException.values());
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
@@ -37,7 +36,7 @@ public class ExchangeRateServlet extends BaseHttpServlet {
         }
     }
 
-    protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doPatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String currencyPair = ServletUtil.getParameterFromPath(request.getPathInfo());
             Map<String, String> parameters = ServletUtil.getParametersFromBody(request);

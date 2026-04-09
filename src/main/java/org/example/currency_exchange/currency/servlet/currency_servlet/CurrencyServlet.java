@@ -1,4 +1,4 @@
-package org.example.currency_exchange.currency.servlet;
+package org.example.currency_exchange.currency.servlet.currency_servlet;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,7 +8,6 @@ import org.example.currency_exchange.commons.BaseHttpServlet;
 import org.example.currency_exchange.commons.ExceptionHandler;
 import org.example.currency_exchange.commons.ObjectDtoMapper;
 import org.example.currency_exchange.util.ServletUtil;
-import org.example.currency_exchange.currency.CurrencyExceptionHandler;
 import org.example.currency_exchange.currency.dto.CodeDTO;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
 import org.example.currency_exchange.currency.mapper.CodeMapper;
@@ -20,7 +19,7 @@ import java.io.IOException;
 public class CurrencyServlet extends BaseHttpServlet {
     private final ObjectDtoMapper<String, CodeDTO> objectDtoMapper = new CodeMapper();
     private final CurrencyService currencyService = new CurrencyService();
-    private final ExceptionHandler exceptionHandler = new CurrencyExceptionHandler();
+    private final ExceptionHandler exceptionHandler = new ExceptionHandler(CurrencyServletTypeException.values());
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {

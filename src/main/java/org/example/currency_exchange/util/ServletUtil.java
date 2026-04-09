@@ -1,7 +1,6 @@
 package org.example.currency_exchange.util;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.example.currency_exchange.Currency;
 import org.example.currency_exchange.JsonConverter;
 import org.example.currency_exchange.exception_and_error.InvalidParameterInPathException;
 
@@ -9,9 +8,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +43,11 @@ public class ServletUtil {
 
     private static Map<String, String> convertBodyToMap(String encodeBody) {
         String[] parameters = encodeBody.split("&");
+        int keyAndValue = 2;
         return Arrays.stream(parameters)
                 .map(parameter -> parameter.split("="))
                 .map(Arrays::asList)
+                .filter(parameter -> parameter.size() == keyAndValue)
                 .collect(Collectors.toMap(
                         List::getFirst,
                         List::getLast

@@ -1,9 +1,9 @@
 package org.example.currency_exchange.commons;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.example.currency_exchange.AnotherTypeException;
 import org.example.currency_exchange.JsonConverter;
 import org.example.currency_exchange.ResponseEntity;
-import org.example.currency_exchange.currency.CurrencyTypeException;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public class ExceptionHandler {
     }
 
     private void loadErrorMessages(TypeException[] typeExceptions) throws JsonProcessingException {
-        for (TypeException typeException: typeExceptions) {
+        for (TypeException typeException : typeExceptions) {
             ResponseEntity responseEntity = typeException.getResponseEntity();
             String messageJson = jsonConverter.convertToJSON(responseEntity);
             responseEntity.setMessage(messageJson);
@@ -40,7 +40,7 @@ public class ExceptionHandler {
         if (exceptions.containsKey(exceptionClassName)) {
             return exceptions.get(exceptionClassName);
         }
-        return exceptions.get(CurrencyTypeException.UnknownException.toString());
+        return exceptions.get(AnotherTypeException.UnknownException.toString());
     }
 
     private String getClassName(IOException exception) {

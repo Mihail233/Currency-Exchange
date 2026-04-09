@@ -1,6 +1,5 @@
 package org.example.currency_exchange.currency;
 
-import org.example.currency_exchange.Currency;
 import org.example.currency_exchange.HikariPool;
 import org.example.currency_exchange.commons.dao.CurrencyDAO;
 import org.example.currency_exchange.exception_and_error.CurrencyNotFoundException;
@@ -60,7 +59,7 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
                     """;
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, currency.getCode());
-            preparedStatement.setString(2, currency.getFullName());
+            preparedStatement.setString(2, currency.getName());
             preparedStatement.setString(3, currency.getSign());
             preparedStatement.setString(4, currency.getCode());
             ResultSet resultSet = preparedStatement.executeQuery();

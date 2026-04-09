@@ -2,13 +2,13 @@ package org.example.currency_exchange.currency.mapper;
 
 import org.example.currency_exchange.commons.ObjectDtoMapper;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
-import org.example.currency_exchange.Currency;
+import org.example.currency_exchange.currency.Currency;
 
 public class CurrencyMapper implements ObjectDtoMapper<Currency, CurrencyDTO> {
 
     @Override
     public CurrencyDTO objectToDto(Currency currency) {
-        return new CurrencyDTO(currency.getId(), currency.getCode(), currency.getFullName(), currency.getSign());
+        return new CurrencyDTO(currency.getId(), currency.getName(), currency.getCode(), currency.getSign());
     }
 
     @Override

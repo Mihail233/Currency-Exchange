@@ -1,6 +1,6 @@
 package org.example.currency_exchange.exchange_rates.service.subservice;
 
-import org.example.currency_exchange.Currency;
+import org.example.currency_exchange.currency.Currency;
 import org.example.currency_exchange.commons.ObjectDtoMapper;
 import org.example.currency_exchange.commons.dao.CurrencyDAO;
 import org.example.currency_exchange.commons.dao.ExchangeRateDAO;

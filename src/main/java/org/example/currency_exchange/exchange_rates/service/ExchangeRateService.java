@@ -1,6 +1,6 @@
 package org.example.currency_exchange.exchange_rates.service;
 
-import org.example.currency_exchange.Currency;
+import org.example.currency_exchange.currency.Currency;
 import org.example.currency_exchange.commons.dao.CurrencyDAO;
 import org.example.currency_exchange.commons.dao.ExchangeRateDAO;
 import org.example.currency_exchange.currency.JdbcSqliteCurrencyDAO;

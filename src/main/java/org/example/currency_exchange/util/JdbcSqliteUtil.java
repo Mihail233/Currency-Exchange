@@ -1,6 +1,6 @@
 package org.example.currency_exchange.util;
 
-import org.example.currency_exchange.Currency;
+import org.example.currency_exchange.currency.Currency;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,8 +12,8 @@ public class JdbcSqliteUtil {
         return new Currency
                 (
                         resultSet.getInt("ID"),
-                        resultSet.getString("Code"),
                         resultSet.getString("FullName"),
+                        resultSet.getString("Code"),
                         resultSet.getString("Sign")
                 );
     }
