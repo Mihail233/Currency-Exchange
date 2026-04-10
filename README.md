@@ -12,12 +12,10 @@ REST API для описания валют и обменных курсов. П
 ![_C4ZxdoPOTjVZiAAB-Y6L1Pw86p-x2UygamO12haGtRIueTsjFuyx_qo-_f87msD1nDcx9ILsYPXUo0bRgwfjwTr](https://github.com/user-attachments/assets/7cf75161-5c08-48cf-b95f-5a9ce73ec2b1)
 
 ## API
-## Currencies
 
 ### GET `/currencies`
 Получение списка валют.
 
-**Пример ответа:**
 ```json
 [
   {
@@ -42,7 +40,6 @@ REST API для описания валют и обменных курсов. П
 Пример:
 GET `/currency/EUR`
 
-Ответ:
 ```json
 
 {
@@ -56,7 +53,7 @@ GET `/currency/EUR`
 ### POST `/currencies`
 
 Добавление новой валюты в базу.
-Тип тела запроса: application/x-www-form-urlencoded
+Тип тела запроса: `application/x-www-form-urlencoded`
 
 Поля формы:
 
@@ -64,7 +61,6 @@ GET `/currency/EUR`
 `code`  
 `sign`  
 
-Пример ответа:
 ```json
 {
   "id": 0,
@@ -78,7 +74,6 @@ GET `/currency/EUR`
 
 Получение списка всех обменных курсов.
 
-Пример ответа:
 ```json
 [
   {
@@ -108,7 +103,6 @@ GET `/currency/EUR`
 Пример:
 GET `/exchangeRate/USDRUB`
 
-Ответ:
 ```json
 {
   "id": 0,
@@ -131,7 +125,7 @@ GET `/exchangeRate/USDRUB`
 ### POST `/exchangeRates`
 
 Добавление нового обменного курса.
-Тип тела: application/x-www-form-urlencoded
+Тип тела: `application/x-www-form-urlencoded`
 
 Поля формы:
 
@@ -141,11 +135,10 @@ GET `/exchangeRate/USDRUB`
 
 Пример формы:
 
-baseCurrencyCode=USD
-targetCurrencyCode=EUR
-rate=0.99
+`baseCurrencyCode=USD`  
+`targetCurrencyCode=EUR`  
+`rate=0.99`  
 
-Ответ:
 ```json
 {
   "id": 0,
@@ -168,16 +161,15 @@ rate=0.99
 ### PATCH `/exchangeRate/{PAIR}`
 
 Обновление существующего обменного курса.
-Тип тела: application/x-www-form-urlencoded
+Тип тела: `application/x-www-form-urlencoded`
 
 Поля формы:
 
 `rate`  
 
 Пример:
-PATCH /exchangeRate/USDRUB
+PATCH `/exchangeRate/USDRUB`
 
-Ответ:
 ```json
 {
   "id": 0,
@@ -211,7 +203,6 @@ PATCH /exchangeRate/USDRUB
 
 GET `/exchange?from=USD&to=AUD&amount=10`
 
-Ответ:
 ```json
 {
   "baseCurrency": {
