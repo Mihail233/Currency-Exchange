@@ -44,7 +44,7 @@ public class ExchangeRateServlet extends BaseHttpServlet {
             ExchangeRateUpdateDTO exchangeRateUpdateDTO = convertMapToDto(parameters);
 
             ExchangeRateDTO exchangeRateDTO = exchangeRateService.updateExchangeRate(exchangeRateUpdateDTO);
-            sendSuccessfulResponse(HttpServletResponse.SC_CREATED, exchangeRateDTO, response);
+            sendSuccessfulResponse(HttpServletResponse.SC_OK, exchangeRateDTO, response);
         } catch (IOException e) {
             ResponseEntity responseEntity = exceptionHandler.catchException(e);
             sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);
