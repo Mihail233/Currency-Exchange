@@ -29,7 +29,7 @@ public class ExchangeRateServlet extends BaseHttpServlet {
             String currencyPair = ServletUtil.getParameterFromPath(request.getPathInfo());
             CurrencyPairDTO currencyPairDTO = objectDtoMapper.objectToDto(currencyPair);
             ExchangeRateDTO exchangeRateDTO = exchangeRateService.getExchangeRate(currencyPairDTO);
-            sendSuccessfulResponse(exchangeRateDTO, response);
+            sendSuccessfulResponse(HttpServletResponse.SC_OK, exchangeRateDTO, response);
         } catch (IOException e) {
             ResponseEntity responseEntity = exceptionHandler.catchException(e);
             sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);
@@ -44,7 +44,7 @@ public class ExchangeRateServlet extends BaseHttpServlet {
             ExchangeRateUpdateDTO exchangeRateUpdateDTO = convertMapToDto(parameters);
 
             ExchangeRateDTO exchangeRateDTO = exchangeRateService.updateExchangeRate(exchangeRateUpdateDTO);
-            sendSuccessfulResponse(exchangeRateDTO, response);
+            sendSuccessfulResponse(HttpServletResponse.SC_CREATED, exchangeRateDTO, response);
         } catch (IOException e) {
             ResponseEntity responseEntity = exceptionHandler.catchException(e);
             sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);

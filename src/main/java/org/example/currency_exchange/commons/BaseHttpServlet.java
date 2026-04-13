@@ -16,9 +16,8 @@ public abstract class BaseHttpServlet extends HttpServlet {
         printWriter.println(message);
     }
 
-    protected void sendSuccessfulResponse(Object DTO, HttpServletResponse response) throws IOException {
+    protected void sendSuccessfulResponse(int code, Object DTO, HttpServletResponse response) throws IOException {
         String json = jsonConverter.convertToJSON(DTO);
-        int code = HttpServletResponse.SC_OK;
         sendResponse(code, json, response);
     }
 }

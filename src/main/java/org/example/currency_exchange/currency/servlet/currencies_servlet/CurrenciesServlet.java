@@ -11,6 +11,7 @@ import org.example.currency_exchange.currency.dto.CurrencyDTO;
 import org.example.currency_exchange.currency.service.CurrencyService;
 import org.example.currency_exchange.exception_and_error.RequiredFormFieldMissException;
 import org.example.currency_exchange.util.ServletUtil;
+import org.example.currency_exchange.currency.Currency;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +25,7 @@ public class CurrenciesServlet extends BaseHttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             List<CurrencyDTO> currencyDTOs = currencyService.getCurrencies();
-            sendSuccessfulResponse(currencyDTOs, response);
+            sendSuccessfulResponse(HttpServletResponse.SC_OK, currencyDTOs, response);
         } catch (IOException e) {
             ResponseEntity responseEntity = exceptionHandler.catchException(e);
             sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);
@@ -36,7 +37,7 @@ public class CurrenciesServlet extends BaseHttpServlet {
             Map<String, String> parameters = ServletUtil.getParametersFromBody(request);
             CurrencyAdditionDTO currencyAdditionDTO = convertMapToDto(parameters);
             CurrencyDTO currencyDTO = currencyService.addCurrency(currencyAdditionDTO);
-            sendSuccessfulResponse(currencyDTO, response);
+            sendSuccessfulResponse(HttpServletResponse.SC_CREATED, currencyDTO, response);
         } catch (IOException e) {
             ResponseEntity responseEntity = exceptionHandler.catchException(e);
             sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);
@@ -46,10 +47,18 @@ public class CurrenciesServlet extends BaseHttpServlet {
     //кастомный под каждый сервлет?
     private CurrencyAdditionDTO convertMapToDto(Map<String, String> parameters) throws RequiredFormFieldMissException {
         try {
-            return ServletUtil.getJsonConverter().getMapper().convertValue(parameters, CurrencyAdditionDTO.class);
+            CurrencyAdditionDTO currencyAdditionDTO = ServletUtil.getJsonConverter().getMapper().convertValue(parameters, CurrencyAdditionDTO.class);
+            checkCurrencySign(currencyAdditionDTO);
+            return currencyAdditionDTO;
         } catch (RuntimeException e) {
             //порядок не решает, illegalArgumentException - если не те аргументы были переданы
             throw new RequiredFormFieldMissException("Отсутсвтвует нужное поле формы");
+        }
+    }
+
+    private void checkCurrencySign(CurrencyAdditionDTO currencyAdditionDTO) {
+        if (currencyAdditionDTO.sign().length() > Currency.MAX_SIGN_SIZE) {
+            throw new RuntimeException();
         }
     }
 }

@@ -24,7 +24,7 @@ public class ExchangeRatesServlet extends BaseHttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             List<ExchangeRateDTO> exchangeRateDTOs = exchangeRateService.getExchangeRates();
-            sendSuccessfulResponse(exchangeRateDTOs, response);
+            sendSuccessfulResponse(HttpServletResponse.SC_OK, exchangeRateDTOs, response);
         } catch (IOException e) {
             ResponseEntity responseEntity = exceptionHandler.catchException(e);
             sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);
@@ -36,7 +36,7 @@ public class ExchangeRatesServlet extends BaseHttpServlet {
             Map<String, String> parameters = ServletUtil.getParametersFromBody(request);
             ExchangeRateAdditionDTO exchangeRateAdditionDTO = convertMapToDto(parameters);
             ExchangeRateDTO exchangeRateDTO = exchangeRateService.addExchangeRate(exchangeRateAdditionDTO);
-            sendSuccessfulResponse(exchangeRateDTO, response);
+            sendSuccessfulResponse(HttpServletResponse.SC_CREATED, exchangeRateDTO, response);
         } catch (IOException e) {
             ResponseEntity responseEntity = exceptionHandler.catchException(e);
             sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);

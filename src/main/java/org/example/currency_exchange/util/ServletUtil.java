@@ -48,6 +48,7 @@ public class ServletUtil {
                 .map(parameter -> parameter.split("="))
                 .map(Arrays::asList)
                 .filter(parameter -> parameter.size() == keyAndValue)
+                .filter(parameter -> !parameter.getLast().trim().isEmpty())
                 .collect(Collectors.toMap(
                         List::getFirst,
                         List::getLast

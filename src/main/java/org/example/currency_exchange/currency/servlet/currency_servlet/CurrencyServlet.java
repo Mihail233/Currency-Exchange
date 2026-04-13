@@ -26,7 +26,7 @@ public class CurrencyServlet extends BaseHttpServlet {
             String currencyCode = ServletUtil.getParameterFromPath(request.getPathInfo());
             CodeDTO codeDTO = objectDtoMapper.objectToDto(currencyCode);
             CurrencyDTO currencyDTO = currencyService.getCurrency(codeDTO);
-            sendSuccessfulResponse(currencyDTO, response);
+            sendSuccessfulResponse(HttpServletResponse.SC_OK, currencyDTO, response);
         } catch (IOException e) {
             ResponseEntity responseEntity = exceptionHandler.catchException(e);
             sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);

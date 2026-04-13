@@ -20,7 +20,6 @@ import org.example.currency_exchange.exchange_rates.service.subservice.ExchangeR
 import java.util.List;
 
 public class ExchangeRateService {
-    public final static int CODE_SIZE = 3;
     private final ExchangeRateDAO<ExchangeRate> exchangeRateDAO = new JdbcSqliteExchangeRate();
     private final CurrencyDAO<Currency> currencyDAO = new JdbcSqliteCurrencyDAO();
     private final ExchangeRatesSubService exchangeRatesSubService = new ExchangeRatesSubService(exchangeRateDAO, currencyDAO);

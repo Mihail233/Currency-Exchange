@@ -1,6 +1,8 @@
 package org.example.currency_exchange.currency;
 
 public class Currency {
+    public final static int CODE_SIZE = 3;
+    public final static int MAX_SIGN_SIZE = 3;
     private Integer id;
     private String name;
     private String code;

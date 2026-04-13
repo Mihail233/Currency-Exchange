@@ -1,4 +1,6 @@
 package org.example.currency_exchange.currency.dto;
 
-public record CurrencyDTO(int id, String name, String code, String sign) {
+import lombok.NonNull;
+
+public record CurrencyDTO(int id, @NonNull String name, @NonNull String code, @NonNull String sign) {
 }

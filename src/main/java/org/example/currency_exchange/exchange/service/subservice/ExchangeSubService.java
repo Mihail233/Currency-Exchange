@@ -1,7 +1,7 @@
 package org.example.currency_exchange.exchange.service.subservice;
 
-import org.example.currency_exchange.currency.Currency;
 import org.example.currency_exchange.commons.dao.ExchangeRateDAO;
+import org.example.currency_exchange.currency.Currency;
 import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
 import org.example.currency_exchange.exception_and_error.ExchangeRateNotFoundException;
 import org.example.currency_exchange.exchange.dto.ExchangeDTO;
@@ -13,6 +13,9 @@ import java.math.RoundingMode;
 import java.util.List;
 
 public class ExchangeSubService {
+    public final static int CONVERTED_AMOUNT_SCALE = 2;
+    public final static int DIVIDE_SCALE = 6;
+    public final static RoundingMode ROUNDING_MODE = RoundingMode.DOWN;
     private final ExchangeRateDAO<ExchangeRate> exchangeRateDAO;
 
     public ExchangeSubService(ExchangeRateDAO<ExchangeRate> exchangeRateDAO) {
@@ -75,7 +78,7 @@ public class ExchangeSubService {
     //0.0001 * 10 -> 0.01; 0.001 * 10 -> 0.01
     private BigDecimal convertAmount(BigDecimal amount, BigDecimal rate) {
         BigDecimal convertedAmount = amount.multiply(rate);
-        return convertedAmount.setScale(ExchangeRate.SCALE, ExchangeRate.ROUNDING_MODE);
+        return convertedAmount.setScale(CONVERTED_AMOUNT_SCALE, ROUNDING_MODE);
     }
 
     private BigDecimal getReverseRate(BigDecimal rate) {
@@ -84,7 +87,7 @@ public class ExchangeSubService {
     }
 
     private BigDecimal divideNumeratorByDenominator(BigDecimal numerator, BigDecimal denominator) {
-        return numerator.divide(denominator, ExchangeRate.SCALE, RoundingMode.CEILING);
+        return numerator.divide(denominator, DIVIDE_SCALE, ROUNDING_MODE);
     }
 
     private ExchangeRate getFromOrToExchangeRate(String currencyCode, List<ExchangeRate> exchangeRates) {

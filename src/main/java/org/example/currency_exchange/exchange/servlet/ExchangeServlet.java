@@ -25,7 +25,7 @@ public class ExchangeServlet extends BaseHttpServlet {
             Map<String, String> queryParameters = ServletUtil.getParametersFromQueryParameters(request.getQueryString());
             ExchangeRequestDTO exchangeRequestDTO = convertMapToDto(queryParameters);
             ExchangeDTO exchangeDTO = exchangeService.makeExchange(exchangeRequestDTO);
-            sendSuccessfulResponse(exchangeDTO, response);
+            sendSuccessfulResponse(HttpServletResponse.SC_OK, exchangeDTO, response);
         } catch (IOException e) {
             ResponseEntity responseEntity = exceptionHandler.catchException(e);
             sendResponse(responseEntity.getStatusCode(), responseEntity.getMessage(), response);

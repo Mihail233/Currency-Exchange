@@ -6,8 +6,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class ExchangeRate {
-    public final static int SCALE = 2;
-    public final static RoundingMode ROUNDING_MODE = RoundingMode.CEILING;
     private Integer id;
     private final Currency baseCurrency;
     private final Currency targetCurrency;
@@ -17,7 +15,7 @@ public class ExchangeRate {
         this.id = id;
         this.baseCurrency = baseCurrency;
         this.targetCurrency = targetCurrency;
-        this.rate = rate.setScale(SCALE, ROUNDING_MODE);
+        this.rate = rate;
     }
 
     public void setId(Integer id) {
