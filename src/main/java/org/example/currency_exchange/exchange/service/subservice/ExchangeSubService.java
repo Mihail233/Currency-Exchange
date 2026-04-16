@@ -1,12 +1,12 @@
 package org.example.currency_exchange.exchange.service.subservice;
 
-import org.example.currency_exchange.commons.dao.ExchangeRateDAO;
+import org.example.currency_exchange.common.dao.ExchangeRateDAO;
 import org.example.currency_exchange.currency.Currency;
-import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
-import org.example.currency_exchange.exception_and_error.ExchangeRateNotFoundException;
+import org.example.currency_exchange.exception.DataBaseUnavailableException;
+import org.example.currency_exchange.exception.ExchangeRateNotFoundException;
 import org.example.currency_exchange.exchange.dto.ExchangeDTO;
 import org.example.currency_exchange.exchange.dto.ExchangeRequestDTO;
-import org.example.currency_exchange.exchange_rates.ExchangeRate;
+import org.example.currency_exchange.exchange_rate.ExchangeRate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

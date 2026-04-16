@@ -1,10 +1,10 @@
 package org.example.currency_exchange.currency;
 
 import org.example.currency_exchange.HikariPool;
-import org.example.currency_exchange.commons.dao.CurrencyDAO;
-import org.example.currency_exchange.exception_and_error.CurrencyNotFoundException;
-import org.example.currency_exchange.exception_and_error.CurrencyWithThisCodeExistsException;
-import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
+import org.example.currency_exchange.common.dao.CurrencyDAO;
+import org.example.currency_exchange.exception.CurrencyNotFoundException;
+import org.example.currency_exchange.exception.CurrencyWithThisCodeExistsException;
+import org.example.currency_exchange.exception.DataBaseUnavailableException;
 import org.example.currency_exchange.util.JdbcSqliteUtil;
 
 import java.sql.*;

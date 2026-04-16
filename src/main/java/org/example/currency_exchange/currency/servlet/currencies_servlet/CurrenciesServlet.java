@@ -4,12 +4,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.currency_exchange.ResponseEntity;
-import org.example.currency_exchange.commons.BaseHttpServlet;
-import org.example.currency_exchange.commons.ExceptionHandler;
+import org.example.currency_exchange.common.BaseHttpServlet;
+import org.example.currency_exchange.common.ExceptionHandler;
 import org.example.currency_exchange.currency.dto.CurrencyAdditionDTO;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
 import org.example.currency_exchange.currency.service.CurrencyService;
-import org.example.currency_exchange.exception_and_error.RequiredFormFieldMissException;
+import org.example.currency_exchange.exception.RequiredFormFieldMissException;
 import org.example.currency_exchange.util.ServletUtil;
 import org.example.currency_exchange.currency.Currency;
 

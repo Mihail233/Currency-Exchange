@@ -1,13 +1,13 @@
 package org.example.currency_exchange.currency.service.subservice;
 
-import org.example.currency_exchange.commons.ObjectDtoMapper;
-import org.example.currency_exchange.commons.dao.CurrencyDAO;
+import org.example.currency_exchange.common.ObjectDtoMapper;
+import org.example.currency_exchange.common.dao.CurrencyDAO;
 import org.example.currency_exchange.currency.Currency;
 import org.example.currency_exchange.currency.dto.CodeDTO;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
 import org.example.currency_exchange.currency.mapper.CurrencyMapper;
-import org.example.currency_exchange.exception_and_error.CurrencyNotFoundException;
-import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
+import org.example.currency_exchange.exception.CurrencyNotFoundException;
+import org.example.currency_exchange.exception.DataBaseUnavailableException;
 
 public class CurrencySubService {
     private final CurrencyDAO<Currency> currencyDAO;

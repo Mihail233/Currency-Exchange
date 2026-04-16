@@ -6,10 +6,82 @@ REST API для описания валют и обменных курсов. П
 - JDBC
 - SQLite
 - Postman
+- HikariCP
 - Maven
 
 ## Структура базы данных:
 ![_C4ZxdoPOTjVZiAAB-Y6L1Pw86p-x2UygamO12haGtRIueTsjFuyx_qo-_f87msD1nDcx9ILsYPXUo0bRgwfjwTr](https://github.com/user-attachments/assets/7cf75161-5c08-48cf-b95f-5a9ce73ec2b1)
+
+## Требования
+Перед запуском убедись, что у тебя установлены: 
+
+- JDK 25
+- Maven
+- Apache Tomcat 11
+- SQLite JDBC драйвер подтянется через Maven
+
+## FrontEnd
+Был взят (отсюда)[https://github.com/zhukovsd/currency-exchange-frontend]
+
+## Перед запуском
+1. Настрой путь к базе данных
+   В файле `src/main/resources/hikari.properties` укажи свой путь к SQLite базе: 
+
+```
+jdbcUrl=jdbc:sqlite::resource:CurrencyExchange.db
+```
+
+## Сборка проекта
+```
+mvn clean package
+```
+
+После сборки будет создан WAR-файл:
+```
+target/CurrencyExchange-1.0-SNAPSHOT.war
+```
+
+## Локальный запуск
+Скопируй WAR в директорию webapps Tomcat:
+```
+cp target/CurrencyExchange-1.0-SNAPSHOT.war <TOMCAT_HOME>/webapps/
+```
+После запуска Tomcat приложение будет доступно по адресу:
+```
+http://localhost:8080/CurrencyExchange-1.0-SNAPSHOT/
+```
+## Используемые хосты и порты
+В процессе локальной разработки и деплоя использовались следующие хосты и порты.
+
+### для Backend
+Backend-приложение запускается на Apache Tomcat.
+
+Локальный адрес backend:
+```
+http://localhost:8080
+```
+Типичный путь при деплое:
+```
+http://localhost:8080/CurrencyExchange-1.0-SNAPSHOT/
+```
+### для Frontend
+Frontend поднимался через nginx, обычно на порту `80`.
+
+Локальный адрес frontend:
+```
+http://localhost
+```
+или
+```
+http://localhost:80
+```
+Взаимодействие в разработке
+Frontend и backend были разделены по портам:
+```
+frontend: localhost:80
+backend: localhost:8080
+```
+Это означает, что frontend отправлял API-запросы на backend по порту `8080`.
 
 ## API
 

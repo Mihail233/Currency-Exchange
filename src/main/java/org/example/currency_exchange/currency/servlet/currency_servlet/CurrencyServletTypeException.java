@@ -1,7 +1,7 @@
 package org.example.currency_exchange.currency.servlet.currency_servlet;
 
 import org.example.currency_exchange.ResponseEntity;
-import org.example.currency_exchange.commons.TypeException;
+import org.example.currency_exchange.common.TypeException;
 
 public enum CurrencyServletTypeException implements TypeException {
     //InvalidCurrencyCodeInPathException - даже если 2 кода в строке, то ошибки что пропущен код

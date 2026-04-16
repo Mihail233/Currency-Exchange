@@ -1,6 +1,6 @@
 package org.example.currency_exchange;
 
-import org.example.currency_exchange.commons.TypeException;
+import org.example.currency_exchange.common.TypeException;
 
 public enum AnotherTypeException implements TypeException {
     UnknownException(new ResponseEntity(500, "Unknown error"));

@@ -1,14 +1,14 @@
 package org.example.currency_exchange.currency.service.subservice;
 
-import org.example.currency_exchange.commons.ObjectDtoMapper;
-import org.example.currency_exchange.commons.dao.CurrencyDAO;
+import org.example.currency_exchange.common.ObjectDtoMapper;
+import org.example.currency_exchange.common.dao.CurrencyDAO;
 import org.example.currency_exchange.currency.Currency;
 import org.example.currency_exchange.currency.dto.CurrencyAdditionDTO;
 import org.example.currency_exchange.currency.dto.CurrencyDTO;
 import org.example.currency_exchange.currency.mapper.CurrencyAdditionMapper;
 import org.example.currency_exchange.currency.mapper.CurrencyMapper;
-import org.example.currency_exchange.exception_and_error.CurrencyWithThisCodeExistsException;
-import org.example.currency_exchange.exception_and_error.DataBaseUnavailableException;
+import org.example.currency_exchange.exception.CurrencyWithThisCodeExistsException;
+import org.example.currency_exchange.exception.DataBaseUnavailableException;
 
 import java.util.ArrayList;
 import java.util.List;

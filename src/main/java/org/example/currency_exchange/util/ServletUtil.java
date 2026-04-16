@@ -2,7 +2,7 @@ package org.example.currency_exchange.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.currency_exchange.JsonConverter;
-import org.example.currency_exchange.exception_and_error.InvalidParameterInPathException;
+import org.example.currency_exchange.exception.InvalidParameterInPathException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

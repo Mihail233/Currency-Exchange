@@ -1,15 +1,16 @@
-package org.example.currency_exchange.currency.servlet.currencies_servlet;
+package org.example.currency_exchange.exchange_rate.servlet.exchange_rates_servlet;
 
 import org.example.currency_exchange.ResponseEntity;
 import org.example.currency_exchange.common.TypeException;
 
-public enum CurrenciesServletTypeException implements TypeException {
+public enum ExchangeRatesTypeException implements TypeException {
     DataBaseUnavailableException(new ResponseEntity(500, "The database is unavailable")),
     RequiredFormFieldMissException(new ResponseEntity(400, "A required form field is missing")),
-    CurrencyWithThisCodeExistsException(new ResponseEntity(409, "A currency with this code exists"));
+    CurrencyNotFoundException(new ResponseEntity(404, "One (or both) currencies from the currency pair do not exist in the database")),
+    CurrencyPairWithThisCodeAlreadyExists(new ResponseEntity(409, "A currency pair with this code already exists"));
     private final ResponseEntity responseEntity;
 
-    CurrenciesServletTypeException(ResponseEntity responseEntity) {
+    ExchangeRatesTypeException(ResponseEntity responseEntity) {
         this.responseEntity = responseEntity;
     }
 

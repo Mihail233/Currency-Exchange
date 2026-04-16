@@ -1,7 +1,7 @@
 package org.example.currency_exchange.exchange.servlet;
 
 import org.example.currency_exchange.ResponseEntity;
-import org.example.currency_exchange.commons.TypeException;
+import org.example.currency_exchange.common.TypeException;
 
 public enum ExchangeTypeException implements TypeException {
     DataBaseUnavailableException(new ResponseEntity(500, "The database is unavailable")),
