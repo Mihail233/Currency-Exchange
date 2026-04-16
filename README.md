@@ -21,7 +21,7 @@ REST API для описания валют и обменных курсов. П
 - SQLite JDBC драйвер подтянется через Maven
 
 ## FrontEnd
-Был взят (отсюда)[https://github.com/zhukovsd/currency-exchange-frontend]
+Был взят [отсюда](https://github.com/zhukovsd/currency-exchange-frontend)
 
 ## Перед запуском
 1. Настрой путь к базе данных
