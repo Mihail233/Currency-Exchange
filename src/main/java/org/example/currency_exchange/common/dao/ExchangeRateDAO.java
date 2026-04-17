@@ -10,9 +10,9 @@ public interface ExchangeRateDAO<T> {
 
     public T findExchangeRateByCurrencyPair(String baseCurrencyCode, String targetCurrencyCode) throws DataBaseUnavailableException, ExchangeRateNotFoundException;
 
-    public ExchangeRate saveExchangeRate(ExchangeRate exchangeRate) throws DataBaseUnavailableException, CurrencyPairWithThisCodeAlreadyExists;
+    public T saveExchangeRate(ExchangeRate exchangeRate) throws DataBaseUnavailableException, CurrencyPairWithThisCodeAlreadyExists;
 
-    public ExchangeRate updateExchangeRate(ExchangeRate exchangeRate) throws DataBaseUnavailableException, CurrencyNotFoundException, ExchangeRateNotFoundException;
+    public T updateExchangeRate(ExchangeRate exchangeRate) throws DataBaseUnavailableException, CurrencyNotFoundException, ExchangeRateNotFoundException;
 
-    public List<ExchangeRate> findIndirectExchangeRate(String firstTargetCurrencyCode, String secondTargetCurrencyCode) throws DataBaseUnavailableException, ExchangeRateNotFoundException;
+    public List<T> findIndirectExchangeRate(String firstTargetCurrencyCode, String secondTargetCurrencyCode) throws DataBaseUnavailableException, ExchangeRateNotFoundException;
 }

@@ -1,11 +1,13 @@
 package org.example.currency_exchange.util;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.currency_exchange.JsonConverter;
 import org.example.currency_exchange.exception.InvalidParameterInPathException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -15,6 +17,14 @@ import java.util.stream.Collectors;
 
 public class ServletUtil {
     private static final JsonConverter JSON_CONVERTER = new JsonConverter();
+
+    //изменить назавние message
+    public static void sendResponse(int code,Object object, HttpServletResponse response) throws IOException {
+        PrintWriter printWriter = response.getWriter();
+        String json = JSON_CONVERTER.convertToJSON(object);
+        response.setStatus(code);
+        printWriter.println(json);
+    }
 
     public static JsonConverter getJsonConverter() {
         return JSON_CONVERTER;
@@ -69,7 +79,7 @@ public class ServletUtil {
 
         int allowedAPathParameters = 1;
         if (pathParameters.size() != allowedAPathParameters) {
-            throw new InvalidParameterInPathException("Не было передано параметра пути");
+            throw new InvalidParameterInPathException("Currency code is missing from the address");
         }
         return pathParameters.getFirst();
     }

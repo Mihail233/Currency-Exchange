@@ -21,7 +21,7 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
             ResultSet resultSet = statement.executeQuery(query);
             return JdbcSqliteUtil.getCurrenciesFromResultSet(resultSet);
         } catch (SQLException e) {
-            throw new DataBaseUnavailableException("База данных недоступна");
+            throw new DataBaseUnavailableException("The database is unavailable");
         }
     }
 
@@ -38,11 +38,11 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (JdbcSqliteUtil.isResultNotFound(resultSet)) {
-                throw new CurrencyNotFoundException("Валюта не найдена");
+                throw new CurrencyNotFoundException("Currency not found");
             }
             return JdbcSqliteUtil.getCurrencyFromResultSet(resultSet);
         } catch (SQLException e) {
-            throw new DataBaseUnavailableException("База данных недоступна");
+            throw new DataBaseUnavailableException("The database is unavailable");
         }
     }
 
@@ -65,13 +65,13 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (JdbcSqliteUtil.isResultNotFound(resultSet)) {
-                throw new CurrencyWithThisCodeExistsException("Валюта с таким кодом уже существует");
+                throw new CurrencyWithThisCodeExistsException("A currency with this code exists");
             }
             int id = resultSet.getInt("ID");
             currency.setId(id);
             return currency;
         } catch (SQLException e) {
-            throw new DataBaseUnavailableException("База данных недоступна");
+            throw new DataBaseUnavailableException("The database is unavailable");
         }
     }
 }

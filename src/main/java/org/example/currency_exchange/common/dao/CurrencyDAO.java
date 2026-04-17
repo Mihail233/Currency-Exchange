@@ -13,5 +13,5 @@ public interface CurrencyDAO<T> {
 
     public T findCurrencyByCode(String currencyCode) throws DataBaseUnavailableException, CurrencyNotFoundException;
 
-    public Currency saveCurrency(Currency currency) throws DataBaseUnavailableException, CurrencyWithThisCodeExistsException;
+    public T saveCurrency(Currency currency) throws DataBaseUnavailableException, CurrencyWithThisCodeExistsException;
 }

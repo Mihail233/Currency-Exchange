@@ -7,9 +7,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class HikariPool {
+    public static final HikariDataSource DATA_SOURCE;
     private static final String PROPERTY_FILE_NAME = "hikari.properties";
     private static final HikariConfig HIKARI_CONFIG;
-    private static final HikariDataSource DATA_SOURCE;
 
     static {
         HIKARI_CONFIG = new HikariConfig(PROPERTY_FILE_NAME);

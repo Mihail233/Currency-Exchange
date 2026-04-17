@@ -13,7 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JdbcSqliteExchangeRate implements ExchangeRateDAO<ExchangeRate> {
+public class JdbcSqliteExchangeRateDAO implements ExchangeRateDAO<ExchangeRate> {
     @Override
     public List<ExchangeRate> findExchangeRates() throws DataBaseUnavailableException {
         try (Connection connection = HikariPool.getConnection()) {

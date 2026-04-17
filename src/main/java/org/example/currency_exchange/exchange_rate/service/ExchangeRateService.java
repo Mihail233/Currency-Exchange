@@ -9,7 +9,7 @@ import org.example.currency_exchange.exception.CurrencyPairWithThisCodeAlreadyEx
 import org.example.currency_exchange.exception.DataBaseUnavailableException;
 import org.example.currency_exchange.exception.ExchangeRateNotFoundException;
 import org.example.currency_exchange.exchange_rate.ExchangeRate;
-import org.example.currency_exchange.exchange_rate.JdbcSqliteExchangeRate;
+import org.example.currency_exchange.exchange_rate.JdbcSqliteExchangeRateDAO;
 import org.example.currency_exchange.exchange_rate.dto.CurrencyPairDTO;
 import org.example.currency_exchange.exchange_rate.dto.ExchangeRateAdditionDTO;
 import org.example.currency_exchange.exchange_rate.dto.ExchangeRateDTO;
@@ -20,7 +20,7 @@ import org.example.currency_exchange.exchange_rate.service.subservice.ExchangeRa
 import java.util.List;
 
 public class ExchangeRateService {
-    private final ExchangeRateDAO<ExchangeRate> exchangeRateDAO = new JdbcSqliteExchangeRate();
+    private final ExchangeRateDAO<ExchangeRate> exchangeRateDAO = new JdbcSqliteExchangeRateDAO();
     private final CurrencyDAO<Currency> currencyDAO = new JdbcSqliteCurrencyDAO();
     private final ExchangeRatesSubService exchangeRatesSubService = new ExchangeRatesSubService(exchangeRateDAO, currencyDAO);
     private final ExchangeRateSubService exchangeRateSubService = new ExchangeRateSubService(exchangeRateDAO, currencyDAO);
