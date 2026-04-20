@@ -2,14 +2,16 @@ package org.example.currency_exchange.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.currency_exchange.JsonConverter;
+import org.example.currency_exchange.entity.Currency;
 import org.example.currency_exchange.exception.InvalidParameterInPathException;
 
 import java.io.BufferedReader;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,7 @@ public class ServletUtil {
     private static final JsonConverter JSON_CONVERTER = new JsonConverter();
 
     //изменить назавние message
-    public static void sendResponse(int code,Object object, HttpServletResponse response) throws IOException {
+    public static void sendResponse(int code, Object object, HttpServletResponse response) throws IOException {
         PrintWriter printWriter = response.getWriter();
         String json = JSON_CONVERTER.convertToJSON(object);
         response.setStatus(code);
@@ -82,5 +84,15 @@ public class ServletUtil {
             throw new InvalidParameterInPathException("Currency code is missing from the address");
         }
         return pathParameters.getFirst();
+    }
+
+    public static List<String> splitCurrencyPairIntoCodes(String currencyPair) {
+        int size = Currency.CODE_SIZE;
+        List<String> codes = new ArrayList<>((currencyPair.length() + size - 1) / size);
+
+        for (int start = 0; start < currencyPair.length(); start += size) {
+            codes.add(currencyPair.substring(start, Math.min(currencyPair.length(), start + size)));
+        }
+        return codes;
     }
 }

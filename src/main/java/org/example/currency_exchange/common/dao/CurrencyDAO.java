@@ -1,17 +1,14 @@
 package org.example.currency_exchange.common.dao;
 
-import org.example.currency_exchange.currency.Currency;
-import org.example.currency_exchange.exception.CurrencyNotFoundException;
-import org.example.currency_exchange.exception.CurrencyWithThisCodeExistsException;
-import org.example.currency_exchange.exception.DataBaseUnavailableException;
+import org.example.currency_exchange.entity.Currency;
 
 import java.util.List;
 
 
 public interface CurrencyDAO<T> {
-    public List<T> findCurrencies() throws DataBaseUnavailableException;
+    public List<T> findCurrencies();
 
-    public T findCurrencyByCode(String currencyCode) throws DataBaseUnavailableException, CurrencyNotFoundException;
+    public T findCurrencyByCode(String currencyCode);
 
-    public T saveCurrency(Currency currency) throws DataBaseUnavailableException, CurrencyWithThisCodeExistsException;
+    public T saveCurrency(Currency currency);
 }

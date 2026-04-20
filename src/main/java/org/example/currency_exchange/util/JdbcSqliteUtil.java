@@ -1,6 +1,6 @@
 package org.example.currency_exchange.util;
 
-import org.example.currency_exchange.currency.Currency;
+import org.example.currency_exchange.entity.Currency;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
