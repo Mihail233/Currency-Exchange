@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.currency_exchange.util.ServletUtil;
-import org.example.currency_exchange.dto.currency.CurrencyDTO;
-import org.example.currency_exchange.dto.exchange.service.currency.CurrencyService;
+import org.example.currency_exchange.dto.currency.CurrencyResponseDTO;
+import org.example.currency_exchange.service.currency.CurrencyService;
 
 import java.io.IOException;
 
@@ -28,7 +28,7 @@ public class CurrencyServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String currencyCode = ServletUtil.getParameterFromPath(request.getPathInfo());
-        CurrencyDTO currencyDTO = currencyService.getCurrency(currencyCode);
-        ServletUtil.sendResponse(HttpServletResponse.SC_OK, currencyDTO, response);
+        CurrencyResponseDTO currencyResponseDTO = currencyService.getCurrency(currencyCode);
+        ServletUtil.sendResponse(HttpServletResponse.SC_OK, currencyResponseDTO, response);
     }
 }

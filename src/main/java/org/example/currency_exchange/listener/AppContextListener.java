@@ -8,12 +8,12 @@ import org.example.currency_exchange.common.dao.CurrencyDAO;
 import org.example.currency_exchange.common.dao.ExchangeRateDAO;
 import org.example.currency_exchange.entity.Currency;
 import org.example.currency_exchange.db.JdbcSqliteCurrencyDAO;
-import org.example.currency_exchange.dto.exchange.service.currency.CurrencyService;
+import org.example.currency_exchange.service.currency.CurrencyService;
 import org.example.currency_exchange.db.HikariPool;
-import org.example.currency_exchange.dto.exchange.service.exchange.ExchangeService;
+import org.example.currency_exchange.service.exchange.ExchangeService;
 import org.example.currency_exchange.entity.ExchangeRate;
 import org.example.currency_exchange.db.JdbcSqliteExchangeRateDAO;
-import org.example.currency_exchange.dto.exchange.service.exchange.ExchangeRateService;
+import org.example.currency_exchange.service.exchange.ExchangeRateService;
 
 @WebListener
 public class AppContextListener implements ServletContextListener {

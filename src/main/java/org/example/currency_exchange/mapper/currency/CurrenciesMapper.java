@@ -2,26 +2,26 @@ package org.example.currency_exchange.mapper.currency;
 
 import org.example.currency_exchange.common.ObjectDtoMapper;
 import org.example.currency_exchange.entity.Currency;
-import org.example.currency_exchange.dto.currency.CurrencyDTO;
+import org.example.currency_exchange.dto.currency.CurrencyResponseDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CurrenciesMapper implements ObjectDtoMapper<List<Currency>, List<CurrencyDTO>> {
-    private final ObjectDtoMapper<Currency, CurrencyDTO> mapper = new CurrencyMapper();
+public class CurrenciesMapper implements ObjectDtoMapper<List<Currency>, List<CurrencyResponseDTO>> {
+    private final ObjectDtoMapper<Currency, CurrencyResponseDTO> mapper = new CurrencyMapper();
 
     @Override
-    public List<CurrencyDTO> objectToDto(List<Currency> currencies) {
-        List<CurrencyDTO> currencyDTOs = new ArrayList<>();
+    public List<CurrencyResponseDTO> objectToDto(List<Currency> currencies) {
+        List<CurrencyResponseDTO> currencyResponseDTOs = new ArrayList<>();
         for (Currency currency: currencies) {
-            CurrencyDTO currencyDTO = mapper.objectToDto(currency);
-            currencyDTOs.add(currencyDTO);
+            CurrencyResponseDTO currencyResponseDTO = mapper.objectToDto(currency);
+            currencyResponseDTOs.add(currencyResponseDTO);
         }
-        return currencyDTOs;
+        return currencyResponseDTOs;
     }
 
     @Override
-    public List<Currency> dtoToObject(List<CurrencyDTO> currencyDTOs) {
+    public List<Currency> dtoToObject(List<CurrencyResponseDTO> currencyResponseDTOs) {
         return null;
     }
 }

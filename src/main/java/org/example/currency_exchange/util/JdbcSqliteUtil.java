@@ -7,7 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JdbcSqliteUtil {
+public final class JdbcSqliteUtil {
+
+    private JdbcSqliteUtil() {}
+
     public static Currency getCurrencyFromResultSet(ResultSet resultSet) throws SQLException {
         return new Currency
                 (

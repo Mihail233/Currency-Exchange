@@ -2,36 +2,5 @@ package org.example.currency_exchange.entity;
 
 import java.math.BigDecimal;
 
-public class ExchangeRate {
-    private Integer id;
-    private final Currency baseCurrency;
-    private final Currency targetCurrency;
-    private final BigDecimal rate;
-
-    public ExchangeRate(Integer id, Currency baseCurrency, Currency targetCurrency, BigDecimal rate) {
-        this.id = id;
-        this.baseCurrency = baseCurrency;
-        this.targetCurrency = targetCurrency;
-        this.rate = rate;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Currency getBaseCurrency() {
-        return baseCurrency;
-    }
-
-    public Currency getTargetCurrency() {
-        return targetCurrency;
-    }
-
-    public BigDecimal getRate() {
-        return rate;
-    }
-
-    public int getId() {
-        return id;
-    }
+public record ExchangeRate(Integer id, Currency baseCurrency, Currency targetCurrency, BigDecimal rate) {
 }

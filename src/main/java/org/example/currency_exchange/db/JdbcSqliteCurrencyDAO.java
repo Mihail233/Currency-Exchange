@@ -54,12 +54,12 @@ public class JdbcSqliteCurrencyDAO implements CurrencyDAO<Currency> {
                     VALUES ((?), (?), (?))
                 """;
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, currency.getCode());
-            preparedStatement.setString(2, currency.getName());
-            preparedStatement.setString(3, currency.getSign());
+            preparedStatement.setString(1, currency.code());
+            preparedStatement.setString(2, currency.name());
+            preparedStatement.setString(3, currency.sign());
 
             preparedStatement.executeUpdate();
-            return findCurrencyByCode(currency.getCode());
+            return findCurrencyByCode(currency.code());
         } catch (SQLiteException e) {
             SQLiteErrorCode sqLiteErrorCode = e.getResultCode();
             if (sqLiteErrorCode == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE) {

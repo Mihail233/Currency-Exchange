@@ -6,9 +6,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.currency_exchange.entity.Currency;
-import org.example.currency_exchange.dto.currency.CurrencyAdditionDTO;
-import org.example.currency_exchange.dto.currency.CurrencyDTO;
-import org.example.currency_exchange.dto.exchange.service.currency.CurrencyService;
+import org.example.currency_exchange.dto.currency.CurrencyRequestDTO;
+import org.example.currency_exchange.dto.currency.CurrencyResponseDTO;
+import org.example.currency_exchange.service.currency.CurrencyService;
 import org.example.currency_exchange.exception.RequiredFormFieldMissException;
 import org.example.currency_exchange.util.ServletUtil;
 
@@ -32,31 +32,31 @@ public class CurrenciesServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        List<CurrencyDTO> currencyDTOs = currencyService.getCurrencies();
-        ServletUtil.sendResponse(HttpServletResponse.SC_OK, currencyDTOs, response);
+        List<CurrencyResponseDTO> currencyResponseDTOs = currencyService.getCurrencies();
+        ServletUtil.sendResponse(HttpServletResponse.SC_OK, currencyResponseDTOs, response);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, String> parameters = ServletUtil.getParametersFromBody(request);
-        CurrencyAdditionDTO currencyAdditionDTO = convertMapToDto(parameters);
-        CurrencyDTO currencyDTO = currencyService.addCurrency(currencyAdditionDTO);
-        ServletUtil.sendResponse(HttpServletResponse.SC_CREATED, currencyDTO, response);
+        CurrencyRequestDTO currencyRequestDTO = convertMapToDto(parameters);
+        CurrencyResponseDTO currencyResponseDTO = currencyService.addCurrency(currencyRequestDTO);
+        ServletUtil.sendResponse(HttpServletResponse.SC_CREATED, currencyResponseDTO, response);
     }
 
     //кастомный под каждый сервлет?
-    private CurrencyAdditionDTO convertMapToDto(Map<String, String> parameters) throws RequiredFormFieldMissException {
+    private CurrencyRequestDTO convertMapToDto(Map<String, String> parameters) throws RequiredFormFieldMissException {
         try {
-            CurrencyAdditionDTO currencyAdditionDTO = ServletUtil.getJsonConverter().getMapper().convertValue(parameters, CurrencyAdditionDTO.class);
-            checkCurrencySign(currencyAdditionDTO);
-            return currencyAdditionDTO;
+            CurrencyRequestDTO currencyRequestDTO = ServletUtil.getJsonConverter().getMapper().convertValue(parameters, CurrencyRequestDTO.class);
+            checkCurrencySign(currencyRequestDTO);
+            return currencyRequestDTO;
         } catch (RuntimeException e) {
             //порядок не решает, illegalArgumentException - если не те аргументы были переданы
             throw new RequiredFormFieldMissException("A required form field is missing");
         }
     }
 
-    private void checkCurrencySign(CurrencyAdditionDTO currencyAdditionDTO) {
-        if (currencyAdditionDTO.sign().length() > Currency.MAX_SIGN_SIZE) {
+    private void checkCurrencySign(CurrencyRequestDTO currencyRequestDTO) {
+        if (currencyRequestDTO.sign().length() > Currency.MAX_SIGN_SIZE) {
             throw new RuntimeException();
         }
     }

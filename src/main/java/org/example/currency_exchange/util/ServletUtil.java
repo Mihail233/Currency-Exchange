@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.currency_exchange.entity.Currency;
 import org.example.currency_exchange.exception.InvalidParameterInPathException;
+import org.example.currency_exchange.exception.RequiredQueryParametersMissException;
 
 import java.io.BufferedReader;
 
@@ -17,10 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ServletUtil {
+public final class ServletUtil {
     private static final JsonConverter JSON_CONVERTER = new JsonConverter();
 
-    //изменить назавние message
+    private ServletUtil() {}
+
     public static void sendResponse(int code, Object object, HttpServletResponse response) throws IOException {
         PrintWriter printWriter = response.getWriter();
         String json = JSON_CONVERTER.convertToJSON(object);
@@ -38,7 +40,11 @@ public class ServletUtil {
         return convertBodyToMap(encodeBody);
     }
 
-    public static Map<String, String> getParametersFromQueryParameters(String queryParameters) {
+    public static Map<String, String> getParametersFromQueryParameters(String queryParameters) throws RequiredQueryParametersMissException {
+        if (queryParameters == null) {
+            throw new RequiredQueryParametersMissException("The required query parameter is missing");
+        }
+
         return convertBodyToMap(queryParameters);
     }
 
@@ -68,7 +74,10 @@ public class ServletUtil {
     }
 
     public static String getParameterFromPath(String path) throws InvalidParameterInPathException {
-        //если /currency, не /currency/ -> кидает path == null
+        if (path == null) {
+            throw new InvalidParameterInPathException("Currency code is missing from the address");
+        }
+
         String separator = "/";
         List<String> pathParameters = Arrays.asList(path.split(separator));
         return filterPathParameters(pathParameters);

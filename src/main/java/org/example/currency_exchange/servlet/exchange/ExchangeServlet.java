@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.currency_exchange.exception.RequiredQueryParametersMissException;
-import org.example.currency_exchange.dto.exchange.service.exchange.ExchangeService;
-import org.example.currency_exchange.dto.exchange.ExchangeDTO;
+import org.example.currency_exchange.service.exchange.ExchangeService;
+import org.example.currency_exchange.dto.exchange.ExchangeResponseDTO;
 import org.example.currency_exchange.dto.exchange.ExchangeRequestDTO;
 import org.example.currency_exchange.util.ServletUtil;
 
@@ -32,8 +32,8 @@ public class ExchangeServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, String> queryParameters = ServletUtil.getParametersFromQueryParameters(request.getQueryString());
         ExchangeRequestDTO exchangeRequestDTO = convertMapToDto(queryParameters);
-        ExchangeDTO exchangeDTO = exchangeService.makeExchange(exchangeRequestDTO);
-        ServletUtil.sendResponse(HttpServletResponse.SC_OK, exchangeDTO, response);
+        ExchangeResponseDTO exchangeResponseDTO = exchangeService.makeExchange(exchangeRequestDTO);
+        ServletUtil.sendResponse(HttpServletResponse.SC_OK, exchangeResponseDTO, response);
     }
 
     private ExchangeRequestDTO convertMapToDto(Map<String, String> queryParameters) throws RequiredQueryParametersMissException {

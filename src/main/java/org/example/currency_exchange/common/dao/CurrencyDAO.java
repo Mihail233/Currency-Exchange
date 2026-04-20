@@ -10,5 +10,5 @@ public interface CurrencyDAO<T> {
 
     public T findCurrencyByCode(String currencyCode);
 
-    public T saveCurrency(Currency currency);
+    public T saveCurrency(T currency);
 }

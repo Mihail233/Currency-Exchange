@@ -6,9 +6,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.currency_exchange.exception.RequiredFormFieldMissException;
-import org.example.currency_exchange.dto.exchange.ExchangeRateDTO;
-import org.example.currency_exchange.dto.exchange.ExchangeRateUpdateDTO;
-import org.example.currency_exchange.dto.exchange.service.exchange.ExchangeRateService;
+import org.example.currency_exchange.dto.exchange.ExchangeRateResponseDTO;
+import org.example.currency_exchange.dto.exchange.ExchangeRateUpdateRequestDTO;
+import org.example.currency_exchange.service.exchange.ExchangeRateService;
 import org.example.currency_exchange.util.ServletUtil;
 
 
@@ -34,8 +34,8 @@ public class ExchangeRateServlet extends HttpServlet {
         String currencyPair = ServletUtil.getParameterFromPath(request.getPathInfo());
         List<String> currencyCodes = ServletUtil.splitCurrencyPairIntoCodes(currencyPair);
 
-        ExchangeRateDTO exchangeRateDTO = exchangeRateService.getExchangeRate(currencyCodes.getFirst(), currencyCodes.getLast());
-        ServletUtil.sendResponse(HttpServletResponse.SC_OK, exchangeRateDTO, response);
+        ExchangeRateResponseDTO exchangeRateResponseDTO = exchangeRateService.getExchangeRate(currencyCodes.getFirst(), currencyCodes.getLast());
+        ServletUtil.sendResponse(HttpServletResponse.SC_OK, exchangeRateResponseDTO, response);
     }
 
     public void doPatch(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -45,14 +45,14 @@ public class ExchangeRateServlet extends HttpServlet {
         Map<String, String> parameters = ServletUtil.getParametersFromBody(request);
         addCurrencyCodesInParameters(currencyCodes.getFirst(), currencyCodes.getLast(), parameters);
 
-        ExchangeRateUpdateDTO exchangeRateUpdateDTO = convertMapToDto(parameters);
-        ExchangeRateDTO exchangeRateDTO = exchangeRateService.updateExchangeRate(exchangeRateUpdateDTO);
-        ServletUtil.sendResponse(HttpServletResponse.SC_OK, exchangeRateDTO, response);
+        ExchangeRateUpdateRequestDTO exchangeRateUpdateRequestDTO = convertMapToDto(parameters);
+        ExchangeRateResponseDTO exchangeRateResponseDTO = exchangeRateService.updateExchangeRate(exchangeRateUpdateRequestDTO);
+        ServletUtil.sendResponse(HttpServletResponse.SC_OK, exchangeRateResponseDTO, response);
     }
 
-    private ExchangeRateUpdateDTO convertMapToDto(Map<String, String> parameters) throws RequiredFormFieldMissException {
+    private ExchangeRateUpdateRequestDTO convertMapToDto(Map<String, String> parameters) throws RequiredFormFieldMissException {
         try {
-            return ServletUtil.getJsonConverter().getMapper().convertValue(parameters, ExchangeRateUpdateDTO.class);
+            return ServletUtil.getJsonConverter().getMapper().convertValue(parameters, ExchangeRateUpdateRequestDTO.class);
         } catch (RuntimeException e) {
             throw new RequiredFormFieldMissException("A required form field is missing");
         }

@@ -17,10 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcSqliteExchangeRateDAO implements ExchangeRateDAO<ExchangeRate> {
-    @Override
-    public List<ExchangeRate> findExchangeRates() throws DataBaseUnavailableException {
-        try (Connection connection = HikariPool.getConnection()) {
-            String query = """
+    private static final String BASE = "base";
+    private static final String TARGET = "target";
+    private static final String FIND_ALL_QUERY = """
                                 select er.ID,
                                 c1.ID as baseID,
                                 c1.FullName as baseFullName,
@@ -34,9 +33,13 @@ public class JdbcSqliteExchangeRateDAO implements ExchangeRateDAO<ExchangeRate> 
                                 from ExchangeRates as er
                                 join Currencies c1 on c1.ID = er.BaseCurrencyId
                                 join Currencies c2 on c2.ID = er.TargetCurrencyId
-                    """;
+            """;
+
+    @Override
+    public List<ExchangeRate> findExchangeRates() throws DataBaseUnavailableException {
+        try (Connection connection = HikariPool.getConnection()) {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+            ResultSet resultSet = statement.executeQuery(FIND_ALL_QUERY);
 
             List<ExchangeRate> exchangeRates = new ArrayList<>();
             while (resultSet.next()) {
@@ -53,22 +56,10 @@ public class JdbcSqliteExchangeRateDAO implements ExchangeRateDAO<ExchangeRate> 
     public ExchangeRate findExchangeRateByCurrencyPair(String baseCurrencyCode, String targetCurrencyCode) throws DataBaseUnavailableException, ExchangeRateNotFoundException {
         try (Connection connection = HikariPool.getConnection()) {
 
-            String query = """
-                    select er.ID,
-                    c1.ID as baseID,
-                    c1.FullName as baseFullName,
-                    c1.code as baseCode,
-                    c1.sign as baseSign,
-                    c2.ID as targetID,
-                    c2.FullName as targetFullName,
-                    c2.code as targetCode,
-                    c2.sign as targetSign,
-                    er.Rate
-                    from ExchangeRates as er
-                    join Currencies c1 on c1.ID = er.BaseCurrencyId
-                    join Currencies c2 on c2.ID = er.TargetCurrencyId
-                    where baseCode = (?) and targetCode = (?);
+            String query = FIND_ALL_QUERY + """
+                    where baseCode = (?) and targetCode = (?)
                     """;
+
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, baseCurrencyCode);
             preparedStatement.setString(2, targetCurrencyCode);
@@ -146,20 +137,7 @@ public class JdbcSqliteExchangeRateDAO implements ExchangeRateDAO<ExchangeRate> 
     @Override
     public List<ExchangeRate> findIndirectExchangeRate(String baseCurrencyCode, String targetCurrencyCode) throws DataBaseUnavailableException, ExchangeRateNotFoundException {
         try (Connection connection = HikariPool.getConnection()) {
-            String query = """
-                    select er.ID,
-                    	c1.ID as baseID,
-                    	c1.FullName as baseFullName,
-                    	c1.code as baseCode,
-                    	c1.sign as baseSign,
-                    	c2.ID as targetID,
-                    	c2.FullName as targetFullName,
-                    	c2.code as targetCode,
-                    	c2.sign as targetSign,
-                    	er.Rate
-                    from ExchangeRates as er
-                    join Currencies c1 on c1.ID = er.BaseCurrencyId
-                    join Currencies c2 on c2.ID = er.TargetCurrencyId
+            String query = FIND_ALL_QUERY + """
                     where baseCode = (
                     	select c3.code as baseCode
                     	from ExchangeRates er2
@@ -188,19 +166,17 @@ public class JdbcSqliteExchangeRateDAO implements ExchangeRateDAO<ExchangeRate> 
     }
 
     private ExchangeRate getExchangeRateFromResultSet(ResultSet resultSet) throws SQLException {
-        String base = "base";
-        String target = "target";
         return new ExchangeRate(
                 resultSet.getInt("ID"),
-                new Currency(resultSet.getInt(base + "ID"),
-                        resultSet.getString(base + "FullName"),
-                        resultSet.getString(base + "Code"),
-                        resultSet.getString(base + "Sign")
+                new Currency(resultSet.getInt(BASE + "ID"),
+                        resultSet.getString(BASE + "FullName"),
+                        resultSet.getString(BASE + "Code"),
+                        resultSet.getString(BASE + "Sign")
                 ),
-                new Currency(resultSet.getInt(target + "ID"),
-                        resultSet.getString(target + "FullName"),
-                        resultSet.getString(target + "Code"),
-                        resultSet.getString(target + "Sign")
+                new Currency(resultSet.getInt(TARGET + "ID"),
+                        resultSet.getString(TARGET + "FullName"),
+                        resultSet.getString(TARGET + "Code"),
+                        resultSet.getString(TARGET + "Sign")
                 ),
                 new BigDecimal(resultSet.getString("Rate"))
         );

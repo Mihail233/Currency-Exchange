@@ -1,45 +1,6 @@
 package org.example.currency_exchange.entity;
 
-public class Currency {
+public record Currency(Integer id, String name, String code, String sign) {
     public final static int CODE_SIZE = 3;
     public final static int MAX_SIGN_SIZE = 3;
-    private Integer id;
-    private String name;
-    private String code;
-    private final String sign;
-
-    public Currency(Integer id, String name, String code, String sign) {
-        this.id = id;
-        this.name = name;
-        this.code = code;
-        this.sign = sign;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSign() {
-        return sign;
-    }
 }
