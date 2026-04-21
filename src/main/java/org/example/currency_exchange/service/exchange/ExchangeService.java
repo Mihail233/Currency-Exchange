@@ -1,5 +1,6 @@
 package org.example.currency_exchange.service.exchange;
 
+import org.example.currency_exchange.common.ObjectDtoMapper;
 import org.example.currency_exchange.common.dao.ExchangeRateDAO;
 import org.example.currency_exchange.entity.Currency;
 import org.example.currency_exchange.exception.DataBaseUnavailableException;
@@ -7,6 +8,7 @@ import org.example.currency_exchange.exception.ExchangeRateNotFoundException;
 import org.example.currency_exchange.dto.exchange.ExchangeResponseDTO;
 import org.example.currency_exchange.dto.exchange.ExchangeRequestDTO;
 import org.example.currency_exchange.entity.ExchangeRate;
+import org.example.currency_exchange.mapper.currency.CurrencyMapper;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,6 +19,7 @@ public class ExchangeService {
     private final static int DIVIDE_SCALE = 6;
     private final static RoundingMode ROUNDING_MODE = RoundingMode.DOWN;
     private final ExchangeRateDAO<ExchangeRate> exchangeRateDAO;
+    private final CurrencyMapper currencyMapper = new CurrencyMapper();
 
     public ExchangeService(ExchangeRateDAO<ExchangeRate> exchangeRateDAO) {
         this.exchangeRateDAO = exchangeRateDAO;
@@ -98,6 +101,6 @@ public class ExchangeService {
     }
 
     private ExchangeResponseDTO constructExchangeResponseDTO(Currency baseCurrency, Currency targetCurrency, BigDecimal rate, BigDecimal amount, BigDecimal convertedAmount) {
-        return new ExchangeResponseDTO(baseCurrency, targetCurrency, rate, amount, convertedAmount);
+        return new ExchangeResponseDTO(currencyMapper.objectToDto(baseCurrency), currencyMapper.objectToDto(targetCurrency), rate, amount, convertedAmount);
     }
 }
